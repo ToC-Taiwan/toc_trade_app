@@ -16,7 +16,7 @@ import 'package:trade_agent_v2/intro.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final libDic = await getLibraryDirectory();
+  final libDic = Platform.isAndroid ? await getApplicationSupportDirectory() : await getLibraryDirectory();
   final database = await openDatabase(
     join(libDic.path, 'toc_sqlite.db'),
     onCreate: (db, version) async {
