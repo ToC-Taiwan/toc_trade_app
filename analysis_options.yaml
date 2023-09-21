@@ -1,1 +1,11 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - lib/pb
+    - lib/database.g.dart
+    - lib/firebase_options.dart
+    - lib/generated
+
+linter:
+  rules:
