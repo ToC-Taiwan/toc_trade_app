@@ -8,14 +8,16 @@
 [![RELEASE](https://img.shields.io/github/release/ToC-Taiwan/toc_trade_app?style=for-the-badge)](https://github.com/ToC-Taiwan/toc_trade_app/releases/latest)
 [![LICENSE](https://img.shields.io/github/license/ToC-Taiwan/toc_trade_app?style=for-the-badge)](COPYING)
 
-```sh
-pip install pyyaml
-pip install GitPython
+![Example](./assets/cover.png)
 
-```sh
-find . -type f  | git check-ignore --stdin
-```
+## Getting Started
+
+- Activate protoc plugin
 
 ```sh
 dart pub global activate protoc_plugin
 ```
+
+## Authors
+
+- [**Tim Hsu**](https://github.com/Chindada)
