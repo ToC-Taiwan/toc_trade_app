@@ -4,16 +4,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sqflite/sqflite.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:trade_agent_v2/daos/daos.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/utils/app_bar.dart';
 
 class StrategyPage extends StatefulWidget {
   const StrategyPage({required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   @override
   State<StrategyPage> createState() => _StrategyPage();
@@ -56,7 +57,7 @@ class _StrategyPage extends State<StrategyPage> {
 
   Future<Map<String, bool>> getAllPickStock() async {
     final result = <String, bool>{};
-    final stocks = await widget.db.pickStockDao.getAllPickStock();
+    final stocks = await PickStockDao(database: widget.db).getAllPickStock();
     for (final stock in stocks) {
       result[stock.stockNum] = true;
     }
@@ -228,7 +229,7 @@ class _StrategyPage extends State<StrategyPage> {
                             0,
                             0,
                           );
-                          await widget.db.pickStockDao.insertPickStock(t);
+                          await PickStockDao(database: widget.db).insertPickStock(t);
                           setState(() {
                             alreadyPick = getAllPickStock();
                           });

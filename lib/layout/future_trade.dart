@@ -4,9 +4,9 @@ import 'package:date_format/date_format.dart' as df;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/database.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/pb/app.pb.dart' as pb;
@@ -16,7 +16,7 @@ import 'package:web_socket_channel/io.dart';
 
 class FutureTradePage extends StatefulWidget {
   const FutureTradePage({required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   @override
   State<FutureTradePage> createState() => _FutureTradePageState();

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/homepage.dart';
 
 class IntroPage extends StatefulWidget {
   const IntroPage({required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   @override
   State<IntroPage> createState() => _IntroPageState();

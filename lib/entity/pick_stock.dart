@@ -1,7 +1,5 @@
-import 'package:floor/floor.dart';
 import 'package:trade_agent_v2/entity/base.dart';
 
-@Entity(tableName: 'pick_stock')
 class PickStock extends BaseObject {
   PickStock(
     this.stockNum,
@@ -15,21 +13,24 @@ class PickStock extends BaseObject {
     int? updateTime,
   }) : super(id: id, updateTime: updateTime, createTime: createTime);
 
-  @ColumnInfo(name: 'stock_num')
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'stock_num': stockNum,
+      'stock_name': stockName,
+      'is_target': isTarget,
+      'price_change': priceChange,
+      'price_change_rate': priceChangeRate,
+      'price': price,
+      'createTime': createTime,
+      'updateTime': updateTime,
+    };
+  }
+
   final String stockNum;
-
-  @ColumnInfo(name: 'stock_name')
   final String stockName;
-
-  @ColumnInfo(name: 'price')
   final double price;
-
-  @ColumnInfo(name: 'price_change_rate')
   final double priceChangeRate;
-
-  @ColumnInfo(name: 'price_change')
   final double priceChange;
-
-  @ColumnInfo(name: 'is_target')
   final int isTarget;
 }

@@ -1,26 +1,61 @@
-import 'package:floor/floor.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 
-@dao
-abstract class PickStockDao {
-  @Query('SELECT * FROM pick_stock')
-  Future<List<PickStock>> getAllPickStock();
+class PickStockDao {
+  PickStockDao({
+    this.database,
+  });
 
-  @Query('SELECT * FROM pick_stock WHERE stock_num = :stockNum')
-  Future<PickStock?> getPickStockByStockNum(String stockNum);
+  Future<List<PickStock>> getAllPickStock() async {
+    final List<Map<String, dynamic>> maps = await database!.query(
+      'pick_stock',
+    );
 
-  @Query('DELETE FROM pick_stock WHERE id !=0')
-  Future<void> deleteAllPickStock();
+    return List.generate(maps.length, (i) {
+      return PickStock(
+        maps[i]['stock_num'] as String,
+        maps[i]['stock_name'] as String,
+        maps[i]['is_target'] as int,
+        maps[i]['price_change'] as double,
+        maps[i]['price_change_rate'] as double,
+        maps[i]['price'] as double,
+        id: maps[i]['id'] as int,
+        createTime: maps[i]['createTime'] as int,
+        updateTime: maps[i]['updateTime'] as int,
+      );
+    });
+  }
 
-  @Update(onConflict: OnConflictStrategy.replace)
-  Future<void> updatePickStock(PickStock record);
+  Future<void> deletePickStock(PickStock record) async {
+    await database!.delete(
+      'pick_stock',
+      where: 'id = ?',
+      whereArgs: [record.id],
+    );
+  }
 
-  @update
-  Future<int> updatePickStocks(List<PickStock> record);
+  Future<void> updatePickStock(PickStock record) async {
+    await database!.update(
+      'pick_stock',
+      record.toMap(),
+      where: 'id = ?',
+      whereArgs: [record.id],
+    );
+  }
 
-  @delete
-  Future<void> deletePickStock(PickStock record);
+  Future<void> deleteAllPickStock() async {
+    await database!.delete(
+      'pick_stock',
+    );
+  }
 
-  @Insert(onConflict: OnConflictStrategy.replace)
-  Future<void> insertPickStock(PickStock record);
+  Future<void> insertPickStock(PickStock record) async {
+    await database!.insert(
+      'pick_stock',
+      record.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Database? database;
 }

@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
+import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:trade_agent_v2/daos/daos.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/layout/kbar.dart';
@@ -15,7 +16,7 @@ import 'package:trade_agent_v2/utils/app_bar.dart';
 
 class Targetspage extends StatefulWidget {
   const Targetspage({required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   @override
   State<Targetspage> createState() => _TargetspageState();
@@ -116,7 +117,7 @@ class _TargetspageState extends State<Targetspage> {
   void initState() {
     super.initState();
     futureTargets = fetchTargets(current, -1);
-    widget.db.basicDao.getBasicByKey('remove_ad_status').then(
+    BasicDao(database: widget.db).getBasicByKey('remove_ad_status').then(
           (value) => {
             if (value != null) {alreadyRemovedAd = value.value == 'true'},
           },

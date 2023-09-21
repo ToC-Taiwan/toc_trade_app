@@ -4,8 +4,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
+import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:trade_agent_v2/daos/daos.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/layout/orders.dart';
@@ -13,7 +14,7 @@ import 'package:trade_agent_v2/utils/app_bar.dart';
 
 class BalancePage extends StatefulWidget {
   const BalancePage({required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   @override
   State<BalancePage> createState() => _BalancePageState();
@@ -34,11 +35,11 @@ class _BalancePageState extends State<BalancePage> {
   void initState() {
     super.initState();
     futureBalance = fetchBalance();
-    widget.db.basicDao.getBasicByKey('remove_ad_status').then(
-          (value) => {
-            if (value != null) {alreadyRemovedAd = value.value == 'true'},
-          },
-        );
+    BasicDao(database: widget.db).getBasicByKey('remove_ad_status').then((value) {
+      if (value != null) {
+        alreadyRemovedAd = value.value == 'true';
+      }
+    });
   }
 
   @override

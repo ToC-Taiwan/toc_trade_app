@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/layout/settings.dart';
 
-AppBar trAppbar(BuildContext context, String title, AppDatabase db, {List<Widget>? actions}) {
+AppBar trAppbar(BuildContext context, String title, Database db, {List<Widget>? actions}) {
   final normalAction = <Widget>[
     // IconButton(
     //   icon: const Icon(Icons.question_mark_outlined),
@@ -30,7 +30,7 @@ AppBar trAppbar(BuildContext context, String title, AppDatabase db, {List<Widget
   );
 }
 
-Route _createRoute(AppDatabase db) => PageRouteBuilder(
+Route _createRoute(Database db) => PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => SettingsPage(
         db: db,
       ),

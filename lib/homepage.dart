@@ -1,6 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/layout/balance.dart';
 import 'package:trade_agent_v2/layout/future_trade.dart';
 import 'package:trade_agent_v2/layout/pick_stock.dart';
@@ -9,7 +9,7 @@ import 'package:trade_agent_v2/layout/targets.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({required this.title, required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   final String title;
 

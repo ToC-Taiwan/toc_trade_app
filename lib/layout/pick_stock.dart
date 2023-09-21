@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:trade_agent_v2/daos/daos.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/layout/kbar.dart';
@@ -12,7 +13,7 @@ import 'package:web_socket_channel/io.dart';
 
 class PickStockPage extends StatefulWidget {
   const PickStockPage({required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   @override
   State<PickStockPage> createState() => _PickStockPageState();
@@ -27,7 +28,7 @@ class _PickStockPageState extends State<PickStockPage> {
 
   @override
   void initState() {
-    stockArray = widget.db.pickStockDao.getAllPickStock();
+    stockArray = PickStockDao(database: widget.db).getAllPickStock();
     initialWS();
     super.initState();
   }
@@ -74,7 +75,7 @@ class _PickStockPageState extends State<PickStockPage> {
                 updateTime: j.updateTime,
               );
               if (i['wrong'] as bool) {
-                widget.db.pickStockDao.deletePickStock(tmp);
+                PickStockDao(database: widget.db).deletePickStock(tmp);
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -92,14 +93,14 @@ class _PickStockPageState extends State<PickStockPage> {
                   ),
                 );
               } else {
-                widget.db.pickStockDao.updatePickStock(tmp);
+                PickStockDao(database: widget.db).updatePickStock(tmp);
               }
               break;
             }
           }
         }
         setState(() {
-          stockArray = widget.db.pickStockDao.getAllPickStock();
+          stockArray = PickStockDao(database: widget.db).getAllPickStock();
         });
       },
       onDone: () {
@@ -139,7 +140,7 @@ class _PickStockPageState extends State<PickStockPage> {
                     style: const TextStyle(color: Colors.black),
                   ),
                   onPressed: () {
-                    widget.db.pickStockDao.deleteAllPickStock();
+                    PickStockDao(database: widget.db).deleteAllPickStock();
                     stockList = [];
                     _channel!.sink.add(
                       jsonEncode({
@@ -147,7 +148,7 @@ class _PickStockPageState extends State<PickStockPage> {
                       }),
                     );
                     setState(() {
-                      stockArray = widget.db.pickStockDao.getAllPickStock();
+                      stockArray = PickStockDao(database: widget.db).getAllPickStock();
                     });
                     Navigator.pop(context);
                   },
@@ -218,9 +219,9 @@ class _PickStockPageState extends State<PickStockPage> {
                       final exist =
                           stockList.firstWhere((element) => element.stockNum == textFieldController.text, orElse: () => PickStock('', '', 0, 0, 0, 0));
                       if (exist.stockNum == '') {
-                        widget.db.pickStockDao.insertPickStock(t);
+                        PickStockDao(database: widget.db).insertPickStock(t);
                         setState(() {
-                          stockArray = widget.db.pickStockDao.getAllPickStock();
+                          stockArray = PickStockDao(database: widget.db).getAllPickStock();
                         });
                       }
                       textFieldController.clear();
@@ -379,8 +380,8 @@ class _PickStockPageState extends State<PickStockPage> {
                             ),
                             onPressed: () {
                               setState(() {
-                                widget.db.pickStockDao.deletePickStock(snapshot.data![index]);
-                                stockArray = widget.db.pickStockDao.getAllPickStock();
+                                PickStockDao(database: widget.db).deletePickStock(snapshot.data![index]);
+                                stockArray = PickStockDao(database: widget.db).getAllPickStock();
                               });
                               Navigator.pop(context);
                             },

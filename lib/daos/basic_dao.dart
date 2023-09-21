@@ -1,26 +1,46 @@
-import 'package:floor/floor.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 
-@dao
-abstract class BasickDao {
-  @Query('SELECT * FROM basic')
-  Future<List<Basic>> getAllBasic();
+class BasicDao {
+  BasicDao({
+    this.database,
+  });
 
-  @Query('SELECT * FROM basic WHERE key = :key')
-  Future<Basic?> getBasicByKey(String key);
+  Future<Basic?> getBasicByKey(String key) async {
+    final List<Map<String, dynamic>> maps = await database!.query(
+      'basic',
+      where: 'key = ?',
+      whereArgs: [key],
+    );
 
-  @Query('DELETE FROM basic WHERE id !=0')
-  Future<void> deleteAllBasic();
+    if (maps.isNotEmpty) {
+      return Basic(
+        maps.first['key'] as String,
+        maps.first['value'] as String,
+        id: maps.first['id'] as int,
+        createTime: maps.first['createTime'] as int,
+        updateTime: maps.first['updateTime'] as int,
+      );
+    }
+    return null;
+  }
 
-  @Update(onConflict: OnConflictStrategy.replace)
-  Future<void> updateBasic(Basic record);
+  Future<void> insertBasic(Basic record) async {
+    await database!.insert(
+      'basic',
+      record.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 
-  @update
-  Future<int> updateBasics(List<Basic> record);
+  Future<void> updateBasic(Basic record) async {
+    await database!.update(
+      'basic',
+      record.toMap(),
+      where: 'key = ?',
+      whereArgs: [record.key],
+    );
+  }
 
-  @delete
-  Future<void> deleteBasic(Basic record);
-
-  @Insert(onConflict: OnConflictStrategy.abort)
-  Future<void> insertBasic(Basic record);
+  Database? database;
 }

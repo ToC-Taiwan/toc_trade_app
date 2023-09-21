@@ -5,13 +5,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:trade_agent_v2/daos/daos.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/intro.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final libDic = await getLibraryDirectory();
+  final database = await openDatabase(
+    join(libDic.path, 'toc_sqlite.db'),
+    onCreate: (db, version) async {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS basic(
+          id INTEGER PRIMARY KEY,
+          key TEXT,
+          value TEXT,
+          createTime INTEGER,
+          updateTime INTEGER)
+        ''');
+      await db.execute(
+        '''
+        CREATE TABLE IF NOT EXISTS pick_stock(
+          id INTEGER PRIMARY KEY,
+          stock_num TEXT,
+          stock_name TEXT,
+          price REAL,
+          price_change_rate REAL,
+          price_change REAL,
+          is_target INTEGER,
+          createTime INTEGER,
+          updateTime INTEGER)
+        ''',
+      );
+    },
+    version: 1,
+  );
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -29,34 +62,31 @@ void main() async {
   }
 
   const latestVersion = '3.4.1';
-
-  // initital floor
-  // final db = await $FloorAppDatabase.databaseBuilder('app_database_tr.db').addMigrations([migration1to2]).build();
-  final db = await $FloorAppDatabase.databaseBuilder('app_database_tr.db').build();
-  final version = await db.basicDao.getBasicByKey('version');
+  final basicDao = BasicDao(database: database);
+  final version = await basicDao.getBasicByKey('version');
   if (version == null) {
-    await db.basicDao.insertBasic(Basic('version', latestVersion));
+    await basicDao.insertBasic(Basic('version', latestVersion));
   } else {
     version.value = latestVersion;
-    await db.basicDao.updateBasic(version);
+    await basicDao.updateBasic(version);
   }
 
-  final balanceHigh = await db.basicDao.getBasicByKey('balance_high');
+  final balanceHigh = await basicDao.getBasicByKey('balance_high');
   if (balanceHigh == null) {
-    await db.basicDao.insertBasic(Basic('balance_high', '1'));
+    await basicDao.insertBasic(Basic('balance_high', '1'));
   }
 
-  final balanceLow = await db.basicDao.getBasicByKey('balance_low');
+  final balanceLow = await basicDao.getBasicByKey('balance_low');
   if (balanceLow == null) {
-    await db.basicDao.insertBasic(Basic('balance_low', '-1'));
+    await basicDao.insertBasic(Basic('balance_low', '-1'));
   }
 
-  final timePeriod = await db.basicDao.getBasicByKey('time_period');
+  final timePeriod = await basicDao.getBasicByKey('time_period');
   if (timePeriod == null) {
-    await db.basicDao.insertBasic(Basic('time_period', '5'));
+    await basicDao.insertBasic(Basic('time_period', '5'));
   }
 
-  var dbLanguageSetup = await db.basicDao.getBasicByKey('language_setup');
+  var dbLanguageSetup = await basicDao.getBasicByKey('language_setup');
   if (dbLanguageSetup == null) {
     final defaultLocale = Platform.localeName;
     Basic tmp;
@@ -68,21 +98,21 @@ void main() async {
     } else {
       tmp = Basic('language_setup', 'en');
     }
-    await db.basicDao.insertBasic(tmp);
+    await basicDao.insertBasic(tmp);
     dbLanguageSetup = tmp;
   }
 
   runApp(
     MyApp(
       dbLanguageSetup.value,
-      db: db,
+      db: database,
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
   const MyApp(this.languageSetup, {required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   final String languageSetup;
 

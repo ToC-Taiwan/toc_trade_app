@@ -1,7 +1,5 @@
-import 'package:floor/floor.dart';
 import 'package:trade_agent_v2/entity/base.dart';
 
-@Entity(tableName: 'basic')
 class Basic extends BaseObject {
   Basic(
     this.key,
@@ -11,9 +9,16 @@ class Basic extends BaseObject {
     int? updateTime,
   }) : super(id: id, updateTime: updateTime, createTime: createTime);
 
-  @ColumnInfo(name: 'key')
-  String key;
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'key': key,
+      'value': value,
+      'createTime': createTime,
+      'updateTime': updateTime,
+    };
+  }
 
-  @ColumnInfo(name: 'value')
+  String key;
   String value;
 }

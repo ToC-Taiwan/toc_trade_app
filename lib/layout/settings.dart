@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
-import 'package:trade_agent_v2/database.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:trade_agent_v2/daos/daos.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/layout/trade_config.dart';
@@ -13,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({required this.db, Key? key}) : super(key: key);
-  final AppDatabase db;
+  final Database db;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -48,9 +49,10 @@ class _SettingsPageState extends State<SettingsPage> {
     _inAppPurchase.purchaseStream.listen(_listenToPurchaseUpdated);
     initStoreInfo();
     super.initState();
-    languageGroup = widget.db.basicDao.getBasicByKey('language_setup');
-    futureVersion = widget.db.basicDao.getBasicByKey('version');
-    widget.db.basicDao.getBasicByKey('remove_ad_status').then(
+    BasicDao dao = BasicDao(database: widget.db);
+    languageGroup = dao.getBasicByKey('language_setup');
+    futureVersion = dao.getBasicByKey('version');
+    dao.getBasicByKey('remove_ad_status').then(
           (value) => {
             if (value != null) {alreadyRemovedAd = value.value == 'true'},
           },
@@ -183,8 +185,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               } else {
                                 languageChanged = false;
                               }
-                              widget.db.basicDao.updateBasic(snapshot.data!);
-                              languageGroup = widget.db.basicDao.getBasicByKey('language_setup');
+                              BasicDao(database: widget.db).updateBasic(snapshot.data!);
+                              languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
                             });
                           },
                         );
@@ -216,8 +218,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               } else {
                                 languageChanged = false;
                               }
-                              widget.db.basicDao.updateBasic(snapshot.data!);
-                              languageGroup = widget.db.basicDao.getBasicByKey('language_setup');
+                              BasicDao(database: widget.db).updateBasic(snapshot.data!);
+                              languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
                             });
                           },
                         );
@@ -249,8 +251,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               } else {
                                 languageChanged = false;
                               }
-                              widget.db.basicDao.updateBasic(snapshot.data!);
-                              languageGroup = widget.db.basicDao.getBasicByKey('language_setup');
+                              BasicDao(database: widget.db).updateBasic(snapshot.data!);
+                              languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
                             });
                           },
                         );
@@ -411,12 +413,12 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> deliverProduct(PurchaseDetails purchaseDetails) async {
     // IMPORTANT!! Always verify purchase details before delivering the product.
     if (purchaseDetails.productID == _kUpgradeId) {
-      final dbRemoveAdStatus = await widget.db.basicDao.getBasicByKey('remove_ad_status');
+      final dbRemoveAdStatus = await BasicDao(database: widget.db).getBasicByKey('remove_ad_status');
       if (dbRemoveAdStatus != null) {
         dbRemoveAdStatus.value = 'true';
-        await widget.db.basicDao.updateBasic(dbRemoveAdStatus);
+        await BasicDao(database: widget.db).updateBasic(dbRemoveAdStatus);
       } else {
-        await widget.db.basicDao.insertBasic(Basic('remove_ad_status', 'true'));
+        await BasicDao(database: widget.db).insertBasic(Basic('remove_ad_status', 'true'));
       }
     }
     setState(() {
