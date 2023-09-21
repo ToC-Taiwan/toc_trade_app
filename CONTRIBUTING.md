@@ -44,6 +44,9 @@ VERSION=3.4.2
 git tag -a v$VERSION $COMMIT_HASH -m $VERSION
 git-chglog -o CHANGELOG.md
 git add CHANGELOG.md
+```
+
+```sh
 git push -u origin --all
 git push -u origin --tags
 ```
