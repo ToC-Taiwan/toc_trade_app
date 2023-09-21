@@ -12,6 +12,7 @@ import 'package:trade_agent_v2/daos/daos.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/intro.dart';
+import 'package:trade_agent_v2/version.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,13 +62,12 @@ void main() async {
     );
   }
 
-  const latestVersion = '3.4.1';
   final basicDao = BasicDao(database: database);
   final version = await basicDao.getBasicByKey('version');
   if (version == null) {
-    await basicDao.insertBasic(Basic('version', latestVersion));
+    await basicDao.insertBasic(Basic('version', appVersion));
   } else {
-    version.value = latestVersion;
+    version.value = appVersion;
     await basicDao.updateBasic(version);
   }
 
