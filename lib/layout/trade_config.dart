@@ -8,7 +8,7 @@ import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 
 class TradeConfigPage extends StatefulWidget {
-  const TradeConfigPage({Key? key}) : super(key: key);
+  const TradeConfigPage({super.key});
 
   @override
   State<TradeConfigPage> createState() => _TradeConfigPageState();

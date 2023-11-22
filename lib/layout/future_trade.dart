@@ -15,7 +15,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:web_socket_channel/io.dart';
 
 class FutureTradePage extends StatefulWidget {
-  const FutureTradePage({required this.db, Key? key}) : super(key: key);
+  const FutureTradePage({required this.db, super.key});
   final Database db;
 
   @override

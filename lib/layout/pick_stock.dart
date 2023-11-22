@@ -12,7 +12,7 @@ import 'package:trade_agent_v2/utils/app_bar.dart';
 import 'package:web_socket_channel/io.dart';
 
 class PickStockPage extends StatefulWidget {
-  const PickStockPage({required this.db, Key? key}) : super(key: key);
+  const PickStockPage({required this.db, super.key});
   final Database db;
 
   @override

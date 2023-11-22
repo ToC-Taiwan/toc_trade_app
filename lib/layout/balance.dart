@@ -13,7 +13,7 @@ import 'package:trade_agent_v2/layout/orders.dart';
 import 'package:trade_agent_v2/utils/app_bar.dart';
 
 class BalancePage extends StatefulWidget {
-  const BalancePage({required this.db, Key? key}) : super(key: key);
+  const BalancePage({required this.db, super.key});
   final Database db;
 
   @override

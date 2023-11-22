@@ -13,7 +13,7 @@ import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/utils/app_bar.dart';
 
 class StrategyPage extends StatefulWidget {
-  const StrategyPage({required this.db, Key? key}) : super(key: key);
+  const StrategyPage({required this.db, super.key});
   final Database db;
 
   @override

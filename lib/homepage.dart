@@ -8,7 +8,7 @@ import 'package:trade_agent_v2/layout/strategy.dart';
 import 'package:trade_agent_v2/layout/targets.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({required this.title, required this.db, Key? key}) : super(key: key);
+  const MyHomePage({required this.title, required this.db, super.key});
   final Database db;
 
   final String title;

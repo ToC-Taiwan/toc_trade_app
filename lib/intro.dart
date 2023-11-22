@@ -4,7 +4,7 @@ import 'package:trade_agent_v2/generated/l10n.dart';
 import 'package:trade_agent_v2/homepage.dart';
 
 class IntroPage extends StatefulWidget {
-  const IntroPage({required this.db, Key? key}) : super(key: key);
+  const IntroPage({required this.db, super.key});
   final Database db;
 
   @override

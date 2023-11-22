@@ -8,10 +8,10 @@ class PickStock extends BaseObject {
     this.priceChange,
     this.priceChangeRate,
     this.price, {
-    int? id,
-    int? createTime,
-    int? updateTime,
-  }) : super(id: id, updateTime: updateTime, createTime: createTime);
+    super.id,
+    super.createTime,
+    super.updateTime,
+  });
 
   Map<String, dynamic> toMap() {
     return {

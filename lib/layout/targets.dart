@@ -15,7 +15,7 @@ import 'package:trade_agent_v2/layout/kbar.dart';
 import 'package:trade_agent_v2/utils/app_bar.dart';
 
 class Targetspage extends StatefulWidget {
-  const Targetspage({required this.db, Key? key}) : super(key: key);
+  const Targetspage({required this.db, super.key});
   final Database db;
 
   @override

@@ -111,7 +111,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp(this.languageSetup, {required this.db, Key? key}) : super(key: key);
+  const MyApp(this.languageSetup, {required this.db, super.key});
   final Database db;
 
   final String languageSetup;

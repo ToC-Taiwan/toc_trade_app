@@ -8,7 +8,7 @@ import 'package:trade_agent_v2/entity/entity.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
 
 class Kbar extends StatefulWidget {
-  const Kbar({required this.stockNum, required this.stockName, Key? key}) : super(key: key);
+  const Kbar({required this.stockNum, required this.stockName, super.key});
 
   final String stockNum;
   final String stockName;

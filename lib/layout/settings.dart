@@ -13,7 +13,7 @@ import 'package:trade_agent_v2/layout/trade_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({required this.db, Key? key}) : super(key: key);
+  const SettingsPage({required this.db, super.key});
   final Database db;
 
   @override
