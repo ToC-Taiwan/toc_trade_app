@@ -1,4 +1,5 @@
 {
+  "@@locale": "zh_Hans_CN",
   "targets": "交易目标",
   "strategy": "策略选股",
   "pick_stock": "自选股",

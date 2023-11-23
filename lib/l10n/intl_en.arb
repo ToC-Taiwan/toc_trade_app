@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "targets": "Targets",
   "strategy": "Strategy",
   "pick_stock": "Pick Stock",
