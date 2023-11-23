@@ -2,6 +2,8 @@
 
 flutter clean
 flutter pub get
+
+rm -rf ./lib/generated
 flutter pub run intl_utils:generate
 
 echo 'storePassword=2@ZdP-V&Z7xNBwc!wdNDSquH' >./android/key.properties

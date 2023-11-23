@@ -91,12 +91,19 @@ void main() async {
     final defaultLocale = Platform.localeName;
     Basic tmp;
     final splitLocale = defaultLocale.split('_');
-    if (splitLocale[0] == 'zh' && splitLocale[1] == 'Hant') {
-      tmp = Basic('language_setup', 'zh_Hant');
-    } else if (splitLocale[0] == 'zh' && splitLocale[1] == 'Hans') {
-      tmp = Basic('language_setup', 'zh_Hans');
-    } else {
-      tmp = Basic('language_setup', 'en');
+    switch (splitLocale.length) {
+      case 1:
+        tmp = Basic('language_setup', splitLocale[0]);
+        break;
+      case 2:
+        tmp = Basic('language_setup', '${splitLocale[0]}_${splitLocale[1]}');
+        break;
+      case 3:
+        tmp = Basic('language_setup', '${splitLocale[0]}_${splitLocale[1]}_${splitLocale[2]}');
+        break;
+      default:
+        tmp = Basic('language_setup', 'en');
+        break;
     }
     await basicDao.insertBasic(tmp);
     dbLanguageSetup = tmp;
@@ -129,30 +136,24 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     final splitLanguage = widget.languageSetup.split('_');
-    if (splitLanguage[0].isNotEmpty) {
-      language = splitLanguage[0];
-    } else {
-      language = 'en';
-    }
-    if (splitLanguage.length == 2 && splitLanguage[1].isNotEmpty) {
-      languageScript = splitLanguage[1];
-    } else {
-      languageScript = '';
-    }
-    if (splitLanguage.length == 3 && splitLanguage[2].isNotEmpty) {
-      country = splitLanguage[2];
-    } else {
-      country = '';
-    }
-
-    if (languageScript.isNotEmpty && country.isNotEmpty) {
-      locale = Locale.fromSubtags(languageCode: language, countryCode: country, scriptCode: languageScript);
-    } else if (languageScript.isNotEmpty && country.isEmpty) {
-      locale = Locale.fromSubtags(languageCode: language, scriptCode: languageScript);
-    } else if (languageScript.isEmpty && country.isNotEmpty) {
-      locale = Locale.fromSubtags(languageCode: language, countryCode: country);
-    } else {
-      locale = Locale.fromSubtags(languageCode: language);
+    switch (splitLanguage.length) {
+      case 1:
+        language = splitLanguage[0];
+        locale = Locale.fromSubtags(languageCode: language);
+        break;
+      case 2:
+        language = splitLanguage[0];
+        country = splitLanguage[1];
+        locale = Locale.fromSubtags(languageCode: language, countryCode: country);
+        break;
+      case 3:
+        language = splitLanguage[0];
+        languageScript = splitLanguage[1];
+        country = splitLanguage[2];
+        locale = Locale.fromSubtags(languageCode: language, countryCode: country, scriptCode: languageScript);
+        break;
+      default:
+        locale = const Locale.fromSubtags(languageCode: 'en');
     }
     super.initState();
   }

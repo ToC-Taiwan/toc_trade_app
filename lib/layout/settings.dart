@@ -264,6 +264,72 @@ class _SettingsPageState extends State<SettingsPage> {
                       );
                     },
                   ),
+                  FutureBuilder<Basic?>(
+                    future: languageGroup,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return RadioListTile<String>(
+                          activeColor: Colors.green,
+                          value: 'ja_JP',
+                          title: const Text(
+                            '日文',
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                          ),
+                          groupValue: snapshot.data!.value,
+                          onChanged: (value) {
+                            setState(() {
+                              snapshot.data!.value = value!;
+                              if (value != originalLanguage) {
+                                languageChanged = true;
+                              } else {
+                                languageChanged = false;
+                              }
+                              BasicDao(database: widget.db).updateBasic(snapshot.data!);
+                              languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
+                            });
+                          },
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      );
+                    },
+                  ),
+                  FutureBuilder<Basic?>(
+                    future: languageGroup,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return RadioListTile<String>(
+                          activeColor: Colors.green,
+                          value: 'ko_KR',
+                          title: const Text(
+                            '韓文',
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                          ),
+                          groupValue: snapshot.data!.value,
+                          onChanged: (value) {
+                            setState(() {
+                              snapshot.data!.value = value!;
+                              if (value != originalLanguage) {
+                                languageChanged = true;
+                              } else {
+                                languageChanged = false;
+                              }
+                              BasicDao(database: widget.db).updateBasic(snapshot.data!);
+                              languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
+                            });
+                          },
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      );
+                    },
+                  ),
                   _showShouldRestart(context),
                 ],
               ),
@@ -281,7 +347,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       return Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: Text(
-                          '${snapshot.data!.value} Latest Version',
+                          snapshot.data!.value,
                           style: const TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                       );
