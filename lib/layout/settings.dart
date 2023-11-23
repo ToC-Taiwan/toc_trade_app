@@ -385,7 +385,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: Text(S.of(context).about_me),
                 // trailing: const Icon(Icons.keyboard_arrow_right),
                 onTap: () {
-                  _launchInWebViewOrVC(Uri(scheme: 'https', path: 'blog.tocandraw.com'));
+                  _launchInWebViewOrVC(Uri(scheme: 'https', path: 'tocandraw.com'));
                 },
               ),
             ],
