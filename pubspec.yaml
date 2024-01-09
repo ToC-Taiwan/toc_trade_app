@@ -1,7 +1,7 @@
 name: trade_agent_v2
 description: Status of trade agent, let user query analyzed stocks.
-publish_to: "none"
-version: 3.5.0+40005
+publish_to: none
+version: 4.0.0+40010
 
 environment:
   sdk: ">=3.1.2 <4.0.0"
@@ -14,27 +14,30 @@ dependencies:
       url: https://github.com/Chindada/candlesticks.git
   curved_navigation_bar: ^1.0.3
   date_format: ^2.0.7
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.10
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^16.3.0
   flutter_localizations:
     sdk: flutter
   flutter_staggered_grid_view: ^0.7.0
   google_fonts: ^6.0.0
-  google_mobile_ads: ^3.0.0
+  google_mobile_ads: ^4.0.0
   http: ^1.1.0
   in_app_purchase: ^3.1.10
   in_app_purchase_storekit: ^0.3.6+7
   intl_utils: ^2.8.5
+  path: ^1.8.3
+  path_provider: ^2.1.1
   percent_indicator: ^4.2.3
   protobuf: ^3.1.0
   sqflite: ^2.3.0
-  syncfusion_flutter_charts: ^23.1.36
+  syncfusion_flutter_charts: ^23.2.7
   table_calendar: ^3.0.9
   url_launcher: ^6.1.14
   wakelock: ^0.6.2
   web_socket_channel: ^2.4.0
-  path: ^1.8.3
-  path_provider: ^2.1.1
 
 dev_dependencies:
   analysis_options: any
@@ -45,17 +48,17 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
-  uses-material-design: true
   assets:
     - assets/cover.png
     - pubspec.yaml
     - assets/google_fonts/
+  uses-material-design: true
 
 flutter_launcher_icons:
   android: true
+  image_path: assets/app_icon.png
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/app_icon.png"
 
 flutter_intl:
   enabled: true

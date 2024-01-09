@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,8 +12,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent_v2/daos/daos.dart';
 import 'package:trade_agent_v2/entity/entity.dart';
+import 'package:trade_agent_v2/firebase_options.dart';
 import 'package:trade_agent_v2/generated/l10n.dart';
-import 'package:trade_agent_v2/intro.dart';
+import 'package:trade_agent_v2/login.dart';
 import 'package:trade_agent_v2/version.dart';
 
 void main() async {
@@ -62,6 +65,23 @@ void main() async {
     );
   }
 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  await FirebaseMessaging.instance.subscribeToTopic('new_targets');
+  await FirebaseMessaging.instance.subscribeToTopic('announcement');
+
   final basicDao = BasicDao(database: database);
   final version = await basicDao.getBasicByKey('version');
   if (version == null) {
@@ -109,12 +129,17 @@ void main() async {
     dbLanguageSetup = tmp;
   }
 
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
     MyApp(
       dbLanguageSetup.value,
       db: database,
     ),
   );
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
 }
 
 class MyApp extends StatefulWidget {
@@ -170,7 +195,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: createMaterialColor(const Color.fromARGB(255, 255, 255, 255)),
         ),
-        home: IntroPage(
+        home: LoginPage(
           db: widget.db,
         ),
         debugShowCheckedModeBanner: false,

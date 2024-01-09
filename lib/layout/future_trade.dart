@@ -663,14 +663,7 @@ class _FutureTradePageState extends State<FutureTradePage> {
                         name: 'volume',
                       ),
                     ],
-                    series: <ChartSeries>[
-                      ColumnSeries(
-                        yAxisName: 'volume',
-                        dataSource: kbarArr,
-                        xValueMapper: (datum, index) => DateTime.parse((datum as KbarData).kbarTime!),
-                        yValueMapper: (datum, index) => (datum as KbarData).volume!,
-                        pointColorMapper: (datum, index) => (datum as KbarData).close! > datum.open! ? Colors.redAccent : Colors.greenAccent,
-                      ),
+                    series: <CartesianSeries>[
                       CandleSeries(
                         yAxisName: 'price',
                         showIndicationForSameValues: true,
@@ -689,6 +682,13 @@ class _FutureTradePageState extends State<FutureTradePage> {
                             dashArray: <double>[5, 5],
                           ),
                         ],
+                      ),
+                      ColumnSeries(
+                        yAxisName: 'volume',
+                        dataSource: kbarArr,
+                        xValueMapper: (datum, index) => DateTime.parse((datum as KbarData).kbarTime!),
+                        yValueMapper: (datum, index) => (datum as KbarData).volume!,
+                        pointColorMapper: (datum, index) => (datum as KbarData).close! > datum.open! ? Colors.redAccent : Colors.greenAccent,
                       ),
                     ],
                   ),
