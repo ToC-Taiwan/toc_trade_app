@@ -1,4 +1,4 @@
-import 'package:trade_agent_v2/pb/app.pb.dart' as pb;
+import 'package:trade_agent/pb/app.pb.dart' as pb;
 
 class RealTimeFutureTick {
   RealTimeFutureTick(

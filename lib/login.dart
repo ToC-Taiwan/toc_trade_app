@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
-import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/homepage.dart';
+import 'package:trade_agent/constant/constant.dart';
+import 'package:trade_agent/homepage.dart';
 
 Future<String> login(String userName, String password) async {
   try {
@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.of(context).pushAndRemoveUntil(
                                     PageRouteBuilder(
                                       pageBuilder: (context, animation1, animation2) => MyHomePage(
-                                        title: 'TradeAgentV2',
+                                        title: 'TradeAgent',
                                         db: widget.db,
                                       ),
                                       transitionDuration: Duration.zero,

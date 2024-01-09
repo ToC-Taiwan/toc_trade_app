@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/daos/daos.dart';
-import 'package:trade_agent_v2/entity/entity.dart';
-import 'package:trade_agent_v2/generated/l10n.dart';
-import 'package:trade_agent_v2/utils/app_bar.dart';
+import 'package:trade_agent/constant/constant.dart';
+import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/generated/l10n.dart';
+import 'package:trade_agent/utils/app_bar.dart';
 
 class StrategyPage extends StatefulWidget {
   const StrategyPage({required this.db, super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:trade_agent_v2/layout/settings.dart';
+import 'package:trade_agent/layout/settings.dart';
 
 AppBar trAppbar(BuildContext context, String title, Database db, {List<Widget>? actions}) {
   final normalAction = <Widget>[

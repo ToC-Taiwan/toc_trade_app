@@ -1,4 +1,4 @@
-import 'package:trade_agent_v2/entity/base.dart';
+import 'package:trade_agent/entity/base.dart';
 
 class PickStock extends BaseObject {
   PickStock(

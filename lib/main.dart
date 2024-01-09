@@ -10,12 +10,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:trade_agent_v2/daos/daos.dart';
-import 'package:trade_agent_v2/entity/entity.dart';
-import 'package:trade_agent_v2/firebase_options.dart';
-import 'package:trade_agent_v2/generated/l10n.dart';
-import 'package:trade_agent_v2/login.dart';
-import 'package:trade_agent_v2/version.dart';
+import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/firebase_options.dart';
+import 'package:trade_agent/generated/l10n.dart';
+import 'package:trade_agent/login.dart';
+import 'package:trade_agent/version.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

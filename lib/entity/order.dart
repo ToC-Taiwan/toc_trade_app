@@ -1,4 +1,4 @@
-import 'package:trade_agent_v2/entity/trade.dart';
+import 'package:trade_agent/entity/trade.dart';
 
 class FutureOrderArr {
   FutureOrderArr({this.orders});

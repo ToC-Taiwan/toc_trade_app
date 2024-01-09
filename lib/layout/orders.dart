@@ -4,9 +4,9 @@ import 'package:date_format/date_format.dart' as df;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/entity/entity.dart';
-import 'package:trade_agent_v2/generated/l10n.dart';
+import 'package:trade_agent/constant/constant.dart';
+import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/generated/l10n.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({required this.date, super.key});

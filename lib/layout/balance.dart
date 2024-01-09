@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
-import 'package:trade_agent_v2/constant/constant.dart';
-import 'package:trade_agent_v2/daos/daos.dart';
-import 'package:trade_agent_v2/entity/entity.dart';
-import 'package:trade_agent_v2/generated/l10n.dart';
-import 'package:trade_agent_v2/layout/orders.dart';
-import 'package:trade_agent_v2/utils/app_bar.dart';
+import 'package:trade_agent/constant/constant.dart';
+import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/generated/l10n.dart';
+import 'package:trade_agent/layout/orders.dart';
+import 'package:trade_agent/utils/app_bar.dart';
 
 class BalancePage extends StatefulWidget {
   const BalancePage({required this.db, super.key});

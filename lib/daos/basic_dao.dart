@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:trade_agent_v2/entity/entity.dart';
+import 'package:trade_agent/entity/entity.dart';
 
 class BasicDao {
   BasicDao({
