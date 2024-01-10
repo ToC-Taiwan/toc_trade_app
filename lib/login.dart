@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
@@ -33,184 +35,223 @@ Future<String> login(String userName, String password) async {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({required this.db, super.key});
+  const LoginPage({required this.db, required this.screenHeight, super.key});
   final Database db;
+  final double screenHeight;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController usernameTextController = TextEditingController();
-  bool usernameIsEmpty = false;
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  TextEditingController passwordTextController = TextEditingController();
-  bool passwordIsEmpty = false;
+  late StreamSubscription<bool> keyboardSubscription;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  String username = '';
+  String password = '';
+
   bool passwordIsObscure = true;
+  bool inputing = false;
+
+  @override
+  void initState() {
+    _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _animation = Tween<double>(begin: widget.screenHeight * 0.7, end: widget.screenHeight * 0.3).animate(_controller);
+
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+      setState(() {
+        inputing = visible;
+        if (visible) {
+          _controller.forward();
+        } else {
+          _controller.reverse();
+        }
+      });
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
-    usernameTextController.dispose();
-    passwordTextController.dispose();
+    _controller.dispose();
+    keyboardSubscription.cancel();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Material(
-        child: DecoratedBox(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(
-                'assets/cover.png',
+  Widget build(BuildContext context) => Stack(
+        children: <Widget>[
+          Image.asset(
+            "assets/cover.png",
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            fit: BoxFit.cover,
+          ),
+          GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              resizeToAvoidBottomInset: false,
+              body: AutofillGroup(
+                child: Form(
+                  key: _formkey,
+                  child: AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: const Offset(0, 0),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: _animation.value),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: TextFormField(
+                                  autofillHints: const [AutofillHints.username],
+                                  enableSuggestions: false,
+                                  autocorrect: false,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Username cannot be empty';
+                                    }
+                                    username = value;
+                                    return null;
+                                  },
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  decoration: const InputDecoration(
+                                    hintText: "Username",
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.all(10),
+                                    hintStyle: TextStyle(color: Colors.blueGrey),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: TextFormField(
+                                  autofillHints: const [AutofillHints.password],
+                                  enableSuggestions: false,
+                                  autocorrect: false,
+                                  obscureText: passwordIsObscure,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Password cannot be empty';
+                                    }
+                                    password = value;
+                                    return null;
+                                  },
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  decoration: InputDecoration(
+                                    hintText: "Password",
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(10),
+                                    hintStyle: const TextStyle(color: Colors.blueGrey),
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          passwordIsObscure = !passwordIsObscure;
+                                        });
+                                      },
+                                      icon: const Icon(Icons.visibility),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 115,
+                                    margin: const EdgeInsets.only(left: 10, right: 5, bottom: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blueGrey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        if (!_formkey.currentState!.validate()) {
+                                          return;
+                                        }
+                                        login(username, password).then(
+                                          (value) {
+                                            if (value.isNotEmpty) {
+                                              Navigator.of(context).pushAndRemoveUntil(
+                                                PageRouteBuilder(
+                                                  pageBuilder: (context, animation1, animation2) => MyHomePage(
+                                                    title: 'TradeAgent',
+                                                    db: widget.db,
+                                                  ),
+                                                  transitionDuration: Duration.zero,
+                                                  reverseTransitionDuration: Duration.zero,
+                                                ),
+                                                (route) => false,
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    "Login failed",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        );
+                                      },
+                                      child: const Text(
+                                        "Login",
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 115,
+                                    margin: const EdgeInsets.only(right: 10, left: 5, bottom: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blueGrey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: TextButton(
+                                      onPressed: () {},
+                                      child: const Text(
+                                        "Register",
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
-          ),
-          // color: const Color.fromARGB(252, 153, 208, 218),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 75),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextField(
-                    controller: usernameTextController,
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        setState(() {
-                          usernameIsEmpty = false;
-                        });
-                      }
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Username",
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(10),
-                      hintStyle: usernameIsEmpty ? const TextStyle(color: Colors.red) : const TextStyle(color: Colors.blueGrey),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextField(
-                    obscureText: passwordIsObscure,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    controller: passwordTextController,
-                    onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        setState(() {
-                          passwordIsEmpty = false;
-                        });
-                      }
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(10),
-                      hintStyle: passwordIsEmpty ? const TextStyle(color: Colors.red) : const TextStyle(color: Colors.blueGrey),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            passwordIsObscure = !passwordIsObscure;
-                          });
-                        },
-                        icon: const Icon(Icons.visibility),
-                      ),
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 115,
-                      margin: const EdgeInsets.only(left: 30, right: 10, bottom: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          if (usernameTextController.text.isEmpty) {
-                            setState(() {
-                              usernameIsEmpty = true;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Username is empty"),
-                              ),
-                            );
-                          } else if (passwordTextController.text.isEmpty) {
-                            setState(() {
-                              passwordIsEmpty = true;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Password is empty"),
-                              ),
-                            );
-                          } else {
-                            login(usernameTextController.text, passwordTextController.text).then(
-                              (value) {
-                                if (value.isNotEmpty) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation1, animation2) => MyHomePage(
-                                        title: 'TradeAgent',
-                                        db: widget.db,
-                                      ),
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
-                                    ),
-                                    (route) => false,
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Login failed"),
-                                    ),
-                                  );
-                                }
-                              },
-                            );
-                          }
-                        },
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 115,
-                      margin: const EdgeInsets.only(right: 30, bottom: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          "Register",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+          )
+        ],
       );
 }

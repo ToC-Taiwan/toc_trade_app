@@ -183,13 +183,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  void hideKeyboard(BuildContext context) {
-    final currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-      FocusManager.instance.primaryFocus?.unfocus();
-    }
-  }
-
   @override
   Widget build(BuildContext context) => MaterialApp(
         theme: ThemeData(
@@ -197,6 +190,7 @@ class _MyAppState extends State<MyApp> {
         ),
         home: LoginPage(
           db: widget.db,
+          screenHeight: MediaQuery.of(context).size.height,
         ),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
@@ -207,15 +201,6 @@ class _MyAppState extends State<MyApp> {
         ],
         locale: locale,
         supportedLocales: S.delegate.supportedLocales,
-        builder: (context, child) => Scaffold(
-          // Global GestureDetector that will dismiss the keyboard
-          body: GestureDetector(
-            onTap: () {
-              hideKeyboard(context);
-            },
-            child: child,
-          ),
-        ),
       );
 }
 
