@@ -73,6 +73,9 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
 
       final response = await http.post(
         Uri.parse('$tradeAgentURLPrefix/user'),
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: jsonEncode(registerBody),
       );
       if (response.statusCode == 200) {

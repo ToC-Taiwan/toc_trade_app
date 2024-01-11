@@ -54,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await http.put(
       Uri.parse('$tradeAgentURLPrefix/user/push-token'),
       headers: {
+        "Content-Type": "application/json",
         "Authorization": API.token,
       },
       body: jsonEncode({
@@ -79,6 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
       messaging.getToken().then((value) {
         putToken(value!);
       });
+      // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      //   log('Message data: ${message.data}');
+      //   if (message.notification != null) {
+      //     log('Message contained a notification: ${message.notification}');
+      //   }
+      // });
     }
   }
 

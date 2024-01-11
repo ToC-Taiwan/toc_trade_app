@@ -19,6 +19,9 @@ Future<String> login(String userName, String password) async {
 
     final response = await http.post(
       Uri.parse('$tradeAgentURLPrefix/login'),
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: jsonEncode(loginBody),
     );
     if (response.statusCode == 200) {
