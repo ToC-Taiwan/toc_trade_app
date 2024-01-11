@@ -1,4 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/layout/balance.dart';
@@ -8,10 +9,9 @@ import 'package:trade_agent/layout/strategy.dart';
 import 'package:trade_agent/layout/targets.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({required this.title, required this.db, super.key});
-  final Database db;
+  const MyHomePage({required this.db, super.key});
 
-  final String title;
+  final Database db;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -24,6 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    checkNotification();
     super.initState();
     pages = [
       Targetspage(
@@ -38,14 +39,28 @@ class _MyHomePageState extends State<MyHomePage> {
       PickStockPage(
         db: widget.db,
       ),
-      // TSEPage(
-      //   db: widget.db,
-      // ),
       BalancePage(
         db: widget.db,
       ),
-      // const SettingsPage(),
     ];
+  }
+
+  void checkNotification() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      await FirebaseMessaging.instance.subscribeToTopic('new_targets');
+      await FirebaseMessaging.instance.subscribeToTopic('announcement');
+    }
   }
 
   @override
@@ -59,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Icon(Icons.call_to_action_rounded, size: 30),
             Icon(Icons.account_balance_outlined, size: 30),
             Icon(Icons.dashboard_customize, size: 30),
-            // Icon(Icons.today_outlined, size: 30),
             Icon(Icons.money, size: 30),
           ],
           color: Colors.blueGrey,

@@ -68,19 +68,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-
-  await FirebaseMessaging.instance.subscribeToTopic('new_targets');
-  await FirebaseMessaging.instance.subscribeToTopic('announcement');
 
   final basicDao = BasicDao(database: database);
   final version = await basicDao.getBasicByKey('version');
@@ -188,10 +175,6 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: createMaterialColor(const Color.fromARGB(255, 255, 255, 255)),
         ),
-        home: LoginPage(
-          db: widget.db,
-          screenHeight: MediaQuery.of(context).size.height,
-        ),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           S.delegate,
@@ -201,6 +184,13 @@ class _MyAppState extends State<MyApp> {
         ],
         locale: locale,
         supportedLocales: S.delegate.supportedLocales,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => LoginPage(
+                db: widget.db,
+                screenHeight: MediaQuery.of(context).size.height,
+              ),
+        },
       );
 }
 

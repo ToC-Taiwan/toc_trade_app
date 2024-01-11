@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/homepage.dart';
+import 'package:trade_agent/modules/api/api.dart';
+import 'package:trade_agent/register.dart';
 
 Future<String> login(String userName, String password) async {
   try {
@@ -193,10 +195,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                         login(username, password).then(
                                           (value) {
                                             if (value.isNotEmpty) {
+                                              API.token = value;
                                               Navigator.of(context).pushAndRemoveUntil(
                                                 PageRouteBuilder(
                                                   pageBuilder: (context, animation1, animation2) => MyHomePage(
-                                                    title: 'TradeAgent',
                                                     db: widget.db,
                                                   ),
                                                   transitionDuration: Duration.zero,
@@ -233,7 +235,23 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: TextButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.of(context).push(PageRouteBuilder(
+                                          pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(screenHeight: widget.screenHeight),
+                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                            const begin = Offset(0, 1);
+                                            const end = Offset.zero;
+                                            const curve = Curves.ease;
+
+                                            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                                            return SlideTransition(
+                                              position: animation.drive(tween),
+                                              child: child,
+                                            );
+                                          },
+                                        ));
+                                      },
                                       child: const Text(
                                         "Register",
                                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
