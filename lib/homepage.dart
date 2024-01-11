@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
+import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/layout/balance.dart';
 import 'package:trade_agent/layout/future_trade.dart';
 import 'package:trade_agent/layout/pick_stock.dart';
 import 'package:trade_agent/layout/strategy.dart';
 import 'package:trade_agent/layout/targets.dart';
+import 'package:trade_agent/modules/api/api.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({required this.db, super.key});
@@ -45,6 +50,18 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
   }
 
+  Future<void> putToken(String token) async {
+    await http.put(
+      Uri.parse('$tradeAgentURLPrefix/user/push-token'),
+      headers: {
+        "Authorization": API.token,
+      },
+      body: jsonEncode({
+        "push-token": token,
+      }),
+    );
+  }
+
   void checkNotification() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
@@ -58,8 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      await FirebaseMessaging.instance.subscribeToTopic('new_targets');
       await FirebaseMessaging.instance.subscribeToTopic('announcement');
+      messaging.getToken().then((value) {
+        putToken(value!);
+      });
     }
   }
 
