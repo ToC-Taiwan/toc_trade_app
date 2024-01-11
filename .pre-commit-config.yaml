@@ -1,5 +1,12 @@
 exclude: "lib/pb|ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md"
 repos:
+  - repo: local
+    hooks:
+      - id: ver
+        name: ver
+        language: system
+        entry: ./scripts/flutter_clean.sh
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
