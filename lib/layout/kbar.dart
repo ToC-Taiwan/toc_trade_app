@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/generated/l10n.dart';
+import 'package:trade_agent/modules/api/api.dart';
 
 class Kbar extends StatefulWidget {
   const Kbar({required this.stockNum, required this.stockName, super.key});
@@ -36,7 +37,12 @@ class _KbarState extends State<Kbar> {
   Future<List<Candle>> fetchCandles(String stockNum, String startDate, String interval) async {
     final candleArr = <Candle>[];
     try {
-      final response = await http.get(Uri.parse('$tradeAgentURLPrefix/history/day-kbar/$stockNum/$startDate/$interval'));
+      final response = await http.get(
+        Uri.parse('$tradeAgentURLPrefix/history/day-kbar/$stockNum/$startDate/$interval'),
+        headers: {
+          "Authorization": API.token,
+        },
+      );
       if (response.statusCode == 200) {
         for (final i in jsonDecode(response.body) as List<dynamic>? ?? <dynamic>[]) {
           final tmp = KbarData.fromJson(i as Map<String, dynamic>);

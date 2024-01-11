@@ -12,6 +12,7 @@ import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/layout/kbar.dart';
+import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
 
 class Targetspage extends StatefulWidget {
@@ -316,7 +317,12 @@ Future<List<Target>> fetchTargets(List<Target> current, num opt) async {
   final targetArr = <Target>[];
   if (opt == -1) {
     try {
-      final response = await http.get(Uri.parse('$tradeAgentURLPrefix/targets'));
+      final response = await http.get(
+        Uri.parse('$tradeAgentURLPrefix/targets'),
+        headers: {
+          "Authorization": API.token,
+        },
+      );
       if (response.statusCode == 200) {
         for (final i in jsonDecode(response.body) as List<dynamic>) {
           targetArr.add(Target.fromJson(i as Map<String, dynamic>));

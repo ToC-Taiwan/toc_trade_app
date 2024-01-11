@@ -10,6 +10,7 @@ import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/generated/l10n.dart';
+import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
 
 class StrategyPage extends StatefulWidget {
@@ -340,7 +341,12 @@ Widget generateRow(String columnName, String value) => SizedBox(
 Future<List<Strategy>> fetchStrategy() async {
   final straregyArr = <Strategy>[];
   try {
-    final response = await http.get(Uri.parse('$tradeAgentURLPrefix/analyze/reborn'));
+    final response = await http.get(
+      Uri.parse('$tradeAgentURLPrefix/analyze/reborn'),
+      headers: {
+        "Authorization": API.token,
+      },
+    );
     if (response.statusCode == 200) {
       for (final i in jsonDecode(response.body) as List<dynamic>) {
         straregyArr.add(Strategy.fromJson(i as Map<String, dynamic>));

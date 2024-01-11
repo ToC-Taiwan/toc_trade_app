@@ -10,6 +10,7 @@ import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/layout/orders.dart';
+import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
 
 class BalancePage extends StatefulWidget {
@@ -341,7 +342,12 @@ String mathFunc(Match match) => '${match[1]},';
 Future<Balance> fetchBalance() async {
   // var balance = Balance;
   try {
-    final response = await http.get(Uri.parse('$tradeAgentURLPrefix/order/balance'));
+    final response = await http.get(
+      Uri.parse('$tradeAgentURLPrefix/order/balance'),
+      headers: {
+        "Authorization": API.token,
+      },
+    );
     if (response.statusCode == 200) {
       return Balance.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     } else {

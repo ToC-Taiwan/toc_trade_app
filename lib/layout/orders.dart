@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/generated/l10n.dart';
+import 'package:trade_agent/modules/api/api.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({required this.date, super.key});
@@ -28,7 +29,12 @@ class _OrderPage extends State<OrderPage> {
 
   Future<void> recalculateBalance() async {
     try {
-      final response = await http.put(Uri.parse('$tradeAgentURLPrefix/order/date/${widget.date}'));
+      final response = await http.put(
+        Uri.parse('$tradeAgentURLPrefix/order/date/${widget.date}'),
+        headers: {
+          "Authorization": API.token,
+        },
+      );
       if (response.statusCode == 200) {
         _showDialog('Recalculate Success');
       } else {
@@ -41,7 +47,12 @@ class _OrderPage extends State<OrderPage> {
 
   Future<String> moveOrderToLatestTradeday(String orderID) async {
     try {
-      final response = await http.patch(Uri.parse('$tradeAgentURLPrefix/order/future/$orderID'));
+      final response = await http.patch(
+        Uri.parse('$tradeAgentURLPrefix/order/future/$orderID'),
+        headers: {
+          "Authorization": API.token,
+        },
+      );
       if (response.statusCode == 200) {
         return 'Move Success';
       } else {
@@ -222,7 +233,12 @@ class _OrderPage extends State<OrderPage> {
 
 Future<FutureOrderArr> fetchOrders(String date) async {
   try {
-    final response = await http.get(Uri.parse('$tradeAgentURLPrefix/order/date/$date'));
+    final response = await http.get(
+      Uri.parse('$tradeAgentURLPrefix/order/date/$date'),
+      headers: {
+        "Authorization": API.token,
+      },
+    );
     if (response.statusCode == 200) {
       return FutureOrderArr.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     } else {

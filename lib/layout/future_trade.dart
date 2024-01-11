@@ -9,6 +9,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/generated/l10n.dart';
+import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/pb/app.pb.dart' as pb;
 import 'package:trade_agent/utils/app_bar.dart';
 import 'package:wakelock/wakelock.dart';
@@ -54,7 +55,13 @@ class _FutureTradePageState extends State<FutureTradePage> {
   }
 
   void initialWS() {
-    _channel = IOWebSocketChannel.connect(Uri.parse(tradeAgentFutureWSURLPrefix), pingInterval: const Duration(seconds: 1));
+    _channel = IOWebSocketChannel.connect(
+      Uri.parse(tradeAgentFutureWSURLPrefix),
+      pingInterval: const Duration(seconds: 1),
+      headers: {
+        "Authorization": API.token,
+      },
+    );
     _channel!.stream.listen(
       (message) {
         if (!mounted) {

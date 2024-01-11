@@ -17,13 +17,9 @@ Future<String> login(String userName, String password) async {
       'password': password,
     };
 
-    var loginBodyJson = jsonEncode(loginBody);
     final response = await http.post(
       Uri.parse('$tradeAgentURLPrefix/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: loginBodyJson,
+      body: jsonEncode(loginBody),
     );
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body) as Map<String, dynamic>;

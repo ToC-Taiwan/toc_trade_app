@@ -71,13 +71,9 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
         'email': email,
       };
 
-      var loginBodyJson = jsonEncode(registerBody);
       final response = await http.post(
         Uri.parse('$tradeAgentURLPrefix/user'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: loginBodyJson,
+        body: jsonEncode(registerBody),
       );
       if (response.statusCode == 200) {
         return '';
