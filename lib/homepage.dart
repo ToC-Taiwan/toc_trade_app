@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "Authorization": API.token,
       },
       body: jsonEncode({
-        "push-token": token,
+        "push_token": token,
       }),
     );
   }
