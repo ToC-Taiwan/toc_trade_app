@@ -187,7 +187,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (snapshot.hasData) {
                         return RadioListTile<String>(
                           activeColor: Colors.green,
-                          value: 'zh_Hant',
+                          value: 'zh_Hant_TW',
                           title: const Text(
                             '繁體中文',
                             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -216,7 +216,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (snapshot.hasData) {
                         return RadioListTile<String>(
                           activeColor: Colors.green,
-                          value: 'zh_Hans',
+                          value: 'zh_Hans_CN',
                           title: const Text(
                             '简体中文',
                             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -245,7 +245,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (snapshot.hasData) {
                         return RadioListTile<String>(
                           activeColor: Colors.green,
-                          value: 'ja_JP',
+                          value: 'ja',
                           title: const Text(
                             '日文',
                             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -274,7 +274,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (snapshot.hasData) {
                         return RadioListTile<String>(
                           activeColor: Colors.green,
-                          value: 'ko_KR',
+                          value: 'ko',
                           title: const Text(
                             '韓文',
                             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),

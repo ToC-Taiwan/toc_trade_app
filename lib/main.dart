@@ -96,25 +96,8 @@ void main() async {
 
   var dbLanguageSetup = await basicDao.getBasicByKey('language_setup');
   if (dbLanguageSetup == null) {
-    final defaultLocale = Platform.localeName;
-    Basic tmp;
-    final splitLocale = defaultLocale.split('_');
-    switch (splitLocale.length) {
-      case 1:
-        tmp = Basic('language_setup', splitLocale[0]);
-        break;
-      case 2:
-        tmp = Basic('language_setup', '${splitLocale[0]}_${splitLocale[1]}');
-        break;
-      case 3:
-        tmp = Basic('language_setup', '${splitLocale[0]}_${splitLocale[1]}_${splitLocale[2]}');
-        break;
-      default:
-        tmp = Basic('language_setup', 'en');
-        break;
-    }
-    await basicDao.insertBasic(tmp);
-    dbLanguageSetup = tmp;
+    dbLanguageSetup = Basic('language_setup', 'en');
+    await basicDao.insertBasic(dbLanguageSetup);
   }
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -132,8 +115,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class MyApp extends StatefulWidget {
   const MyApp(this.languageSetup, {required this.db, super.key});
-  final Database db;
 
+  final Database db;
   final String languageSetup;
 
   @override
