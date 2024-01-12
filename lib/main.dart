@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +14,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/firebase_options.dart';
+import 'package:trade_agent/locale.dart';
 import 'package:trade_agent/login.dart';
 import 'package:trade_agent/version.dart';
 
@@ -139,53 +141,42 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late String language;
-  late String languageScript;
-  late String country;
   late Locale locale;
 
   @override
   void initState() {
-    final splitLanguage = widget.languageSetup.split('_');
-    switch (splitLanguage.length) {
-      case 1:
-        language = splitLanguage[0];
-        locale = Locale.fromSubtags(languageCode: language);
-        break;
-      case 2:
-        language = splitLanguage[0];
-        country = splitLanguage[1];
-        locale = Locale.fromSubtags(languageCode: language, countryCode: country);
-        break;
-      case 3:
-        language = splitLanguage[0];
-        languageScript = splitLanguage[1];
-        country = splitLanguage[2];
-        locale = Locale.fromSubtags(languageCode: language, countryCode: country, scriptCode: languageScript);
-        break;
-      default:
-        locale = const Locale.fromSubtags(languageCode: 'en');
-    }
+    locale = LocaleBloc.splitLanguage(widget.languageSetup);
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        theme: ThemeData(
-          primarySwatch: createMaterialColor(const Color.fromARGB(255, 255, 255, 255)),
-        ),
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: locale,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => LoginPage(
-                db: widget.db,
-                screenHeight: MediaQuery.of(context).size.height,
-              ),
-        },
-      );
+  void dispose() {
+    LocaleBloc.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => StreamBuilder(
+      stream: LocaleBloc.localeStream,
+      initialData: locale,
+      builder: (context, snapshot) {
+        return MaterialApp(
+          theme: ThemeData(
+            primarySwatch: createMaterialColor(const Color.fromARGB(255, 255, 255, 255)),
+          ),
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: snapshot.data,
+          initialRoute: '/',
+          routes: {
+            '/': (context) => LoginPage(
+                  db: widget.db,
+                  screenHeight: MediaQuery.of(context).size.height,
+                ),
+          },
+        );
+      });
 }
 
 MaterialColor createMaterialColor(Color color) {

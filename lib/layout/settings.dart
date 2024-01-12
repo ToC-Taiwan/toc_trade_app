@@ -10,6 +10,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/trade_config.dart';
+import 'package:trade_agent/locale.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -29,8 +30,6 @@ class _SettingsPageState extends State<SettingsPage> {
   late Future<Basic?> futureVersion;
   late Future<Basic?> languageGroup;
 
-  String originalLanguage = '';
-  bool languageChanged = false;
   bool alreadyRemovedAd = false;
 
   Future<void> _launchInWebViewOrVC(Uri url) async {
@@ -116,15 +115,6 @@ class _SettingsPageState extends State<SettingsPage> {
     super.dispose();
   }
 
-  Widget _showShouldRestart(BuildContext context) {
-    if (!languageChanged) {
-      return Container();
-    }
-    return ListTile(
-      trailing: Text(AppLocalizations.of(context)!.restart_to_apply_changes, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.white,
@@ -166,9 +156,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     future: languageGroup,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        if (originalLanguage.isEmpty) {
-                          originalLanguage = snapshot.data!.value;
-                        }
                         return RadioListTile<String>(
                           activeColor: Colors.green,
                           value: 'en',
@@ -180,13 +167,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           onChanged: (value) {
                             setState(() {
                               snapshot.data!.value = value!;
-                              if (value != originalLanguage) {
-                                languageChanged = true;
-                              } else {
-                                languageChanged = false;
-                              }
                               BasicDao(database: widget.db).updateBasic(snapshot.data!);
                               languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
+                              LocaleBloc.changeLocaleFromLanguageSetup(value);
                             });
                           },
                         );
@@ -213,13 +196,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           onChanged: (value) {
                             setState(() {
                               snapshot.data!.value = value!;
-                              if (value != originalLanguage) {
-                                languageChanged = true;
-                              } else {
-                                languageChanged = false;
-                              }
                               BasicDao(database: widget.db).updateBasic(snapshot.data!);
                               languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
+                              LocaleBloc.changeLocaleFromLanguageSetup(value);
                             });
                           },
                         );
@@ -246,13 +225,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           onChanged: (value) {
                             setState(() {
                               snapshot.data!.value = value!;
-                              if (value != originalLanguage) {
-                                languageChanged = true;
-                              } else {
-                                languageChanged = false;
-                              }
                               BasicDao(database: widget.db).updateBasic(snapshot.data!);
                               languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
+                              LocaleBloc.changeLocaleFromLanguageSetup(value);
                             });
                           },
                         );
@@ -279,13 +254,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           onChanged: (value) {
                             setState(() {
                               snapshot.data!.value = value!;
-                              if (value != originalLanguage) {
-                                languageChanged = true;
-                              } else {
-                                languageChanged = false;
-                              }
                               BasicDao(database: widget.db).updateBasic(snapshot.data!);
                               languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
+                              LocaleBloc.changeLocaleFromLanguageSetup(value);
                             });
                           },
                         );
@@ -312,13 +283,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           onChanged: (value) {
                             setState(() {
                               snapshot.data!.value = value!;
-                              if (value != originalLanguage) {
-                                languageChanged = true;
-                              } else {
-                                languageChanged = false;
-                              }
                               BasicDao(database: widget.db).updateBasic(snapshot.data!);
                               languageGroup = BasicDao(database: widget.db).getBasicByKey('language_setup');
+                              LocaleBloc.changeLocaleFromLanguageSetup(value);
                             });
                           },
                         );
@@ -330,7 +297,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       );
                     },
                   ),
-                  _showShouldRestart(context),
                 ],
               ),
               _buildRemoveAdTile(),
