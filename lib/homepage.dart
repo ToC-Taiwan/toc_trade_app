@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -94,13 +96,33 @@ class _MyHomePageState extends State<MyHomePage> {
       messaging.getToken().then((value) {
         putToken(value!);
       });
-      // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      //   log('Message data: ${message.data}');
-      //   if (message.notification != null) {
-      //     log('Message contained a notification: ${message.notification}');
-      //   }
-      // });
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        _showNotification(context, message);
+      });
     }
+  }
+
+  void _showNotification(BuildContext context, RemoteMessage msg) {
+    ElegantNotification(
+      icon: const Icon(
+        Icons.notifications,
+        color: Colors.blueGrey,
+        size: 35,
+      ),
+      width: MediaQuery.of(context).size.width,
+      height: 100,
+      notificationPosition: NotificationPosition.topRight,
+      animation: AnimationType.fromRight,
+      title: Text(
+        msg.notification!.title!,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      description: Text(msg.notification!.body!),
+      showProgressIndicator: false,
+    ).show(context);
   }
 
   @override
