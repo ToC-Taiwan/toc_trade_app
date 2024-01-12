@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +11,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/layout/kbar.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
@@ -141,7 +141,7 @@ class _TargetspageState extends State<Targetspage> {
         backgroundColor: Colors.white,
         appBar: trAppbar(
           context,
-          S.of(context).targets,
+          AppLocalizations.of(context)!.targets,
           widget.db,
         ),
         body: SizedBox(
@@ -152,7 +152,7 @@ class _TargetspageState extends State<Targetspage> {
                 if (snapshot.data!.isEmpty) {
                   return Center(
                     child: Text(
-                      S.of(context).no_data,
+                      AppLocalizations.of(context)!.no_data,
                       style: const TextStyle(
                         fontSize: 30,
                       ),
@@ -252,8 +252,8 @@ class _TargetspageState extends State<Targetspage> {
                             color: Colors.grey,
                           ),
                           border: const UnderlineInputBorder(),
-                          labelText: S.of(context).search,
-                          hintText: S.of(context).stock_number,
+                          labelText: AppLocalizations.of(context)!.search,
+                          hintText: AppLocalizations.of(context)!.stock_number,
                           suffixIcon: IconButton(
                             onPressed: clearTextField,
                             icon: const Icon(Icons.clear, color: Colors.grey),

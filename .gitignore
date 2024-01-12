@@ -46,3 +46,4 @@ app.*.map.json
 .vscode
 version.dart
 lib/generated
+need_translate.txt

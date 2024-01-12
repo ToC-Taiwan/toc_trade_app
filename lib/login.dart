@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
@@ -127,17 +128,17 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                   autocorrect: false,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Username cannot be empty';
+                                      return AppLocalizations.of(context)!.username_cannot_be_empty;
                                     }
                                     username = value;
                                     return null;
                                   },
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  decoration: const InputDecoration(
-                                    hintText: "Username",
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!.username,
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.all(10),
-                                    hintStyle: TextStyle(color: Colors.blueGrey),
+                                    contentPadding: const EdgeInsets.all(10),
+                                    hintStyle: const TextStyle(color: Colors.blueGrey),
                                   ),
                                 ),
                               ),
@@ -154,14 +155,14 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                   obscureText: passwordIsObscure,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Password cannot be empty';
+                                      return AppLocalizations.of(context)!.password_cannot_be_empty;
                                     }
                                     password = value;
                                     return null;
                                   },
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                   decoration: InputDecoration(
-                                    hintText: "Password",
+                                    hintText: AppLocalizations.of(context)!.password,
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(10),
                                     hintStyle: const TextStyle(color: Colors.blueGrey),
@@ -207,10 +208,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                               );
                                             } else {
                                               ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(
+                                                SnackBar(
                                                   content: Text(
-                                                    "Login failed",
-                                                    style: TextStyle(
+                                                    AppLocalizations.of(context)!.login_failed,
+                                                    style: const TextStyle(
                                                       color: Colors.red,
                                                     ),
                                                   ),
@@ -220,9 +221,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                           },
                                         );
                                       },
-                                      child: const Text(
-                                        "Login",
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.login,
+                                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                                       ),
                                     ),
                                   ),
@@ -251,9 +252,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                           },
                                         ));
                                       },
-                                      child: const Text(
-                                        "Register",
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.register,
+                                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                                       ),
                                     ),
                                   ),

@@ -3,13 +3,13 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
 
@@ -117,7 +117,7 @@ class _StrategyPage extends State<StrategyPage> {
         backgroundColor: Colors.white,
         appBar: trAppbar(
           context,
-          S.of(context).strategy,
+          AppLocalizations.of(context)!.strategy,
           widget.db,
         ),
         body: Column(
@@ -199,7 +199,7 @@ class _StrategyPage extends State<StrategyPage> {
                   if (value.isEmpty) {
                     return Center(
                       child: Text(
-                        S.of(context).no_data,
+                        AppLocalizations.of(context)!.no_data,
                         style: const TextStyle(
                           fontSize: 20,
                         ),

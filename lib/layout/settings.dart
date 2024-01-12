@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/layout/trade_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -121,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
       return Container();
     }
     return ListTile(
-      trailing: Text(S.of(context).restart_to_apply_changes, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+      trailing: Text(AppLocalizations.of(context)!.restart_to_apply_changes, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
     );
   }
 
@@ -131,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           centerTitle: false,
           elevation: 0,
-          title: Text(S.of(context).settings),
+          title: Text(AppLocalizations.of(context)!.settings),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.close),
@@ -146,7 +146,7 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               // ListTile(
               //   leading: const Icon(Icons.notifications),
-              //   title: Text(S.of(context).settings_of_notification),
+              //   title: Text(AppLocalizations.of(context)!.settings_of_notification),
               //   trailing: const Icon(Icons.keyboard_arrow_right),
               // ),
               ExpansionTile(
@@ -157,7 +157,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: Colors.black,
                 ),
                 title: Text(
-                  S.of(context).language,
+                  AppLocalizations.of(context)!.language,
                   style: const TextStyle(color: Colors.black),
                 ),
                 trailing: const Icon(Icons.keyboard_arrow_right),
@@ -339,7 +339,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Icons.info_rounded,
                   color: Colors.black,
                 ),
-                title: Text(S.of(context).version),
+                title: Text(AppLocalizations.of(context)!.version),
                 trailing: FutureBuilder<Basic?>(
                   future: futureVersion,
                   builder: (context, snapshot) {
@@ -365,8 +365,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   Icons.settings,
                   color: Colors.black,
                 ),
-                title: Text(S.of(context).trade_configuration),
-                subtitle: Text(S.of(context).read_only),
+                title: Text(AppLocalizations.of(context)!.trade_configuration),
+                subtitle: Text(AppLocalizations.of(context)!.read_only),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const TradeConfigPage()),
@@ -382,7 +382,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Icons.settings_accessibility_outlined,
                   color: Colors.black,
                 ),
-                title: Text(S.of(context).about_me),
+                title: Text(AppLocalizations.of(context)!.about_me),
                 // trailing: const Icon(Icons.keyboard_arrow_right),
                 onTap: () {
                   _launchInWebViewOrVC(Uri(scheme: 'https', path: 'tocandraw.com'));
@@ -405,7 +405,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (_notFoundIds.isNotEmpty) {
       productList.add(
         ListTile(
-          title: Text(S.of(context).product_list_abnormal, style: const TextStyle(color: Colors.black)),
+          title: Text(AppLocalizations.of(context)!.product_list_abnormal, style: const TextStyle(color: Colors.black)),
         ),
       );
     }
@@ -463,15 +463,15 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     return ListTile(
-      title: Text(S.of(context).already_purchased),
-      // subtitle: Text(S.of(context).already_purchased),
+      title: Text(AppLocalizations.of(context)!.already_purchased),
+      // subtitle: Text(AppLocalizations.of(context)!.already_purchased),
       trailing: TextButton(
         style: TextButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: Colors.green[800],
         ),
         onPressed: _inAppPurchase.restorePurchases,
-        child: Text(S.of(context).restore),
+        child: Text(AppLocalizations.of(context)!.restore),
       ),
     );
   }
@@ -528,7 +528,7 @@ class _SettingsPageState extends State<SettingsPage> {
           color: Colors.black,
         ),
         title: Text(
-          S.of(context).developing,
+          AppLocalizations.of(context)!.developing,
           style: const TextStyle(color: Colors.black),
         ),
       );
@@ -541,7 +541,7 @@ class _SettingsPageState extends State<SettingsPage> {
         color: Colors.black,
       ),
       title: Text(
-        S.of(context).remove_ads,
+        AppLocalizations.of(context)!.remove_ads,
         style: const TextStyle(color: Colors.black),
       ),
       trailing: const Icon(Icons.keyboard_arrow_right),

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
@@ -63,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     setState(() {
       registering = true;
     });
-
+    final unknownErrMsg = AppLocalizations.of(context)!.unknown_error;
     try {
       var registerBody = {
         'username': userName,
@@ -85,7 +86,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
         return result['response'];
       }
     } on Exception {
-      return 'unknown error';
+      return unknownErrMsg;
     }
   }
 
@@ -104,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     ScaffoldMessenger.of(context).showMaterialBanner(
       MaterialBanner(
         content: Text(
-          success ? 'Register success' : result,
+          success ? AppLocalizations.of(context)!.register_success : result,
           style: const TextStyle(
             color: Colors.black,
           ),
@@ -123,9 +124,9 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
             onPressed: () {
               removeBanner();
             },
-            child: const Text(
-              "Dismiss",
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context)!.dismiss,
+              style: const TextStyle(
                 color: Colors.blueGrey,
               ),
             ),
@@ -155,9 +156,9 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0.5,
-                title: const Text(
-                  "Register",
-                  style: TextStyle(color: Colors.black),
+                title: Text(
+                  AppLocalizations.of(context)!.register,
+                  style: const TextStyle(color: Colors.black),
                 ),
                 centerTitle: true,
                 leading: IconButton(
@@ -196,20 +197,20 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                   autocorrect: false,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Username cannot be empty';
+                                      return AppLocalizations.of(context)!.username_cannot_be_empty;
                                     }
                                     if (value.length < 8) {
-                                      return 'Username must be at least 8 characters';
+                                      return AppLocalizations.of(context)!.username_minimum_length_is_8;
                                     }
                                     username = value;
                                     return null;
                                   },
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  decoration: const InputDecoration(
-                                    hintText: "Username",
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!.username,
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.all(10),
-                                    hintStyle: TextStyle(color: Colors.blueGrey),
+                                    contentPadding: const EdgeInsets.all(10),
+                                    hintStyle: const TextStyle(color: Colors.blueGrey),
                                   ),
                                 ),
                               ),
@@ -226,17 +227,17 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                   obscureText: passwordIsObscure,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Password cannot be empty';
+                                      return AppLocalizations.of(context)!.password_cannot_be_empty;
                                     }
                                     if (value.length < 8) {
-                                      return 'Password must be at least 8 characters';
+                                      return AppLocalizations.of(context)!.password_minimum_length_is_8;
                                     }
                                     password = value;
                                     return null;
                                   },
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                   decoration: InputDecoration(
-                                    hintText: "Password",
+                                    hintText: AppLocalizations.of(context)!.password,
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(10),
                                     hintStyle: const TextStyle(color: Colors.blueGrey),
@@ -264,17 +265,17 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                   obscureText: confirmPasswordIsObscure,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Confirm Password cannot be empty';
+                                      return AppLocalizations.of(context)!.confirm_password_cannot_be_empty;
                                     }
                                     if (value != password) {
-                                      return 'Confirm Password must be same as Password';
+                                      return AppLocalizations.of(context)!.confirm_password_is_not_same_as_password;
                                     }
                                     confirmPassword = value;
                                     return null;
                                   },
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                   decoration: InputDecoration(
-                                    hintText: "Confirm Password",
+                                    hintText: AppLocalizations.of(context)!.confirm_password,
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(10),
                                     hintStyle: const TextStyle(color: Colors.blueGrey),
@@ -301,20 +302,20 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                   autocorrect: false,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Email Address cannot be empty';
+                                      return AppLocalizations.of(context)!.email_cannot_be_empty;
                                     }
                                     if (!EmailValidator.validate(value)) {
-                                      return 'Please enter a valid Email';
+                                      return AppLocalizations.of(context)!.email_is_invalid;
                                     }
                                     email = value;
                                     return null;
                                   },
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  decoration: const InputDecoration(
-                                    hintText: "Email Address",
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!.email_address,
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.all(10),
-                                    hintStyle: TextStyle(color: Colors.blueGrey),
+                                    contentPadding: const EdgeInsets.all(10),
+                                    hintStyle: const TextStyle(color: Colors.blueGrey),
                                   ),
                                 ),
                               ),
@@ -348,7 +349,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                           color: Colors.white60,
                                         )
                                       : Text(
-                                          success ? "😁" : "Register",
+                                          success ? "😁" : AppLocalizations.of(context)!.register,
                                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                                         ),
                                 ),

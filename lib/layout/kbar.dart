@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:candlesticks/candlesticks.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/modules/api/api.dart';
 
 class Kbar extends StatefulWidget {
@@ -118,7 +118,7 @@ class _KbarState extends State<Kbar> {
                 );
               },
               child: Text(
-                S.of(context).display,
+                AppLocalizations.of(context)!.display,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

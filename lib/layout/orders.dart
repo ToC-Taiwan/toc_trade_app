@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:date_format/date_format.dart' as df;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/modules/api/api.dart';
 
 class OrderPage extends StatefulWidget {
@@ -76,7 +76,7 @@ class _OrderPage extends State<OrderPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          title: Text(S.of(context).notification),
+          title: Text(AppLocalizations.of(context)!.notification),
           content: Text(
             message,
             textAlign: TextAlign.center,
@@ -85,7 +85,7 @@ class _OrderPage extends State<OrderPage> {
             Center(
               child: ElevatedButton(
                 child: Text(
-                  S.of(context).ok,
+                  AppLocalizations.of(context)!.ok,
                   style: const TextStyle(color: Colors.black),
                 ),
                 onPressed: () {
@@ -111,7 +111,7 @@ class _OrderPage extends State<OrderPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        title: Text(S.of(context).notification),
+        title: Text(AppLocalizations.of(context)!.notification),
         content: const Text(
           'Are you sure to move order to latest trade day?',
           textAlign: TextAlign.center,
@@ -120,7 +120,7 @@ class _OrderPage extends State<OrderPage> {
           Center(
             child: ElevatedButton(
               child: Text(
-                S.of(context).cancel,
+                AppLocalizations.of(context)!.cancel,
                 style: const TextStyle(color: Colors.red),
               ),
               onPressed: () {
@@ -131,7 +131,7 @@ class _OrderPage extends State<OrderPage> {
           Center(
             child: ElevatedButton(
               child: Text(
-                S.of(context).ok,
+                AppLocalizations.of(context)!.ok,
                 style: const TextStyle(color: Colors.black),
               ),
               onPressed: () {
@@ -214,7 +214,7 @@ class _OrderPage extends State<OrderPage> {
                 }
                 return Center(
                   child: Text(
-                    S.of(context).no_data,
+                    AppLocalizations.of(context)!.no_data,
                     style: GoogleFonts.getFont(
                       'Source Code Pro',
                       fontStyle: FontStyle.normal,

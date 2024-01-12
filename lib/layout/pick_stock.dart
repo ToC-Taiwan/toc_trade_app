@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/layout/kbar.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
@@ -86,12 +86,12 @@ class _PickStockPageState extends State<PickStockPage> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text(S.of(context).warning),
-                    content: Text('${tmp.stockNum} ${S.of(context).stock_dose_not_exist}'),
+                    title: Text(AppLocalizations.of(context)!.warning),
+                    content: Text('${tmp.stockNum} ${AppLocalizations.of(context)!.stock_dose_not_exist}'),
                     actions: [
                       ElevatedButton(
                         child: Text(
-                          S.of(context).ok,
+                          AppLocalizations.of(context)!.ok,
                           style: const TextStyle(color: Colors.black),
                         ),
                         onPressed: () => Navigator.pop(context),
@@ -131,19 +131,19 @@ class _PickStockPageState extends State<PickStockPage> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text(S.of(context).delete_all_pick_stock),
-              content: Text(S.of(context).delete_all_pick_stock_confirm),
+              title: Text(AppLocalizations.of(context)!.delete_all_pick_stock),
+              content: Text(AppLocalizations.of(context)!.delete_all_pick_stock_confirm),
               actions: [
                 ElevatedButton(
                   child: Text(
-                    S.of(context).cancel,
+                    AppLocalizations.of(context)!.cancel,
                     style: const TextStyle(color: Colors.black),
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
                 ElevatedButton(
                   child: Text(
-                    S.of(context).delete,
+                    AppLocalizations.of(context)!.delete,
                     style: const TextStyle(color: Colors.black),
                   ),
                   onPressed: () {
@@ -173,12 +173,12 @@ class _PickStockPageState extends State<PickStockPage> {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text(S.of(context).type_stock_number),
+                title: Text(AppLocalizations.of(context)!.type_stock_number),
                 content: TextField(
                   // onChanged: (value) {},
                   controller: textFieldController,
                   decoration: InputDecoration(
-                    hintText: '${S.of(context).stock_number}(0050, 00878...)',
+                    hintText: '${AppLocalizations.of(context)!.stock_number}(0050, 00878...)',
                   ),
                   keyboardType: TextInputType.number,
                   autofocus: true,
@@ -186,7 +186,7 @@ class _PickStockPageState extends State<PickStockPage> {
                 actions: <Widget>[
                   ElevatedButton(
                     child: Text(
-                      S.of(context).cancel,
+                      AppLocalizations.of(context)!.cancel,
                       style: const TextStyle(color: Colors.black),
                     ),
                     onPressed: () {
@@ -200,12 +200,12 @@ class _PickStockPageState extends State<PickStockPage> {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text(S.of(context).warning),
-                            content: Text(S.of(context).input_must_not_empty),
+                            title: Text(AppLocalizations.of(context)!.warning),
+                            content: Text(AppLocalizations.of(context)!.input_must_not_empty),
                             actions: [
                               ElevatedButton(
                                 child: Text(
-                                  S.of(context).ok,
+                                  AppLocalizations.of(context)!.ok,
                                   style: const TextStyle(color: Colors.black),
                                 ),
                                 onPressed: () => Navigator.pop(context),
@@ -235,7 +235,7 @@ class _PickStockPageState extends State<PickStockPage> {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      S.of(context).add,
+                      AppLocalizations.of(context)!.add,
                       style: const TextStyle(color: Colors.black),
                     ),
                   ),
@@ -250,7 +250,7 @@ class _PickStockPageState extends State<PickStockPage> {
       backgroundColor: Colors.white,
       appBar: trAppbar(
         context,
-        S.of(context).pick_stock,
+        AppLocalizations.of(context)!.pick_stock,
         widget.db,
         actions: actions,
       ),
@@ -269,13 +269,13 @@ class _PickStockPageState extends State<PickStockPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      S.of(context).no_pick_stock,
+                      AppLocalizations.of(context)!.no_pick_stock,
                       style: const TextStyle(fontSize: 30),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Text(
-                        S.of(context).click_plus_to_add_stock,
+                        AppLocalizations.of(context)!.click_plus_to_add_stock,
                         style: const TextStyle(fontSize: 22, color: Colors.grey),
                       ),
                     ),
@@ -368,12 +368,12 @@ class _PickStockPageState extends State<PickStockPage> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text(S.of(context).delete),
-                        content: Text(S.of(context).delete_pick_stock_confirm),
+                        title: Text(AppLocalizations.of(context)!.delete),
+                        content: Text(AppLocalizations.of(context)!.delete_pick_stock_confirm),
                         actions: <Widget>[
                           ElevatedButton(
                             child: Text(
-                              S.of(context).cancel,
+                              AppLocalizations.of(context)!.cancel,
                               style: const TextStyle(color: Colors.black),
                             ),
                             onPressed: () {
@@ -382,7 +382,7 @@ class _PickStockPageState extends State<PickStockPage> {
                           ),
                           ElevatedButton(
                             child: Text(
-                              S.of(context).ok,
+                              AppLocalizations.of(context)!.ok,
                               style: const TextStyle(color: Colors.black),
                             ),
                             onPressed: () {

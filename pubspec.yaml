@@ -1,7 +1,7 @@
 name: trade_agent
 description: Status of trade agent, let user query analyzed stocks.
 publish_to: none
-version: 4.0.0+40016
+version: 4.0.0+40017
 
 environment:
   sdk: ">=3.1.2 <4.0.0"
@@ -29,7 +29,7 @@ dependencies:
   http: ^1.1.0
   in_app_purchase: ^3.1.10
   in_app_purchase_storekit: ^0.3.6+7
-  intl_utils: ^2.8.5
+  intl: ^0.18.1
   path: ^1.8.3
   path_provider: ^2.1.1
   percent_indicator: ^4.2.3
@@ -55,12 +55,10 @@ flutter:
     - pubspec.yaml
     - assets/google_fonts/
   uses-material-design: true
+  generate: true
 
 flutter_launcher_icons:
   android: true
   image_path: assets/app_icon.png
   ios: true
   remove_alpha_ios: true
-
-flutter_intl:
-  enabled: true

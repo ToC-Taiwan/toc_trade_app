@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:date_format/date_format.dart' as df;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/pb/app.pb.dart' as pb;
 import 'package:trade_agent/utils/app_bar.dart';
@@ -155,7 +155,7 @@ class _FutureTradePageState extends State<FutureTradePage> {
         // backgroundColor: Colors.white,
         appBar: trAppbar(
           context,
-          S.of(context).future_trade,
+          AppLocalizations.of(context)!.future_trade,
           widget.db,
         ),
         body: SizedBox(
@@ -199,7 +199,7 @@ class _FutureTradePageState extends State<FutureTradePage> {
                                             if (snapshot.hasData) {
                                               if (snapshot.data!.direction == 'Buy') {
                                                 return Text(
-                                                  '${S.of(context).buy}: ${snapshot.data!.quantity}\n${S.of(context).avg}: ${snapshot.data!.price}',
+                                                  '${AppLocalizations.of(context)!.buy}: ${snapshot.data!.quantity}\n${AppLocalizations.of(context)!.avg}: ${snapshot.data!.price}',
                                                   style: GoogleFonts.getFont(
                                                     'Source Code Pro',
                                                     fontStyle: FontStyle.normal,
@@ -210,7 +210,7 @@ class _FutureTradePageState extends State<FutureTradePage> {
                                               }
                                               if (snapshot.data!.direction == 'Sell') {
                                                 return Text(
-                                                  '${S.of(context).sell}: ${snapshot.data!.quantity}\n${S.of(context).avg}: ${snapshot.data!.price}',
+                                                  '${AppLocalizations.of(context)!.sell}: ${snapshot.data!.quantity}\n${AppLocalizations.of(context)!.avg}: ${snapshot.data!.price}',
                                                   style: GoogleFonts.getFont(
                                                     'Source Code Pro',
                                                     fontStyle: FontStyle.normal,
@@ -480,7 +480,7 @@ class _FutureTradePageState extends State<FutureTradePage> {
                                   }
                                   return Center(
                                     child: Text(
-                                      '${S.of(context).loading}...',
+                                      '${AppLocalizations.of(context)!.loading}...',
                                       style: const TextStyle(fontSize: 20),
                                     ),
                                   );

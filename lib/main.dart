@@ -5,7 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,7 +13,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/firebase_options.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/login.dart';
 import 'package:trade_agent/version.dart';
 
@@ -176,14 +175,9 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: createMaterialColor(const Color.fromARGB(255, 255, 255, 255)),
         ),
         debugShowCheckedModeBanner: false,
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         locale: locale,
-        supportedLocales: S.delegate.supportedLocales,
         initialRoute: '/',
         routes: {
           '/': (context) => LoginPage(

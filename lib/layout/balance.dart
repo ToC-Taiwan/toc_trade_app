@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/layout/orders.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
@@ -147,7 +147,7 @@ class _BalancePageState extends State<BalancePage> {
         // backgroundColor: Colors.white,
         appBar: trAppbar(
           context,
-          S.of(context).balance,
+          AppLocalizations.of(context)!.balance,
           widget.db,
         ),
         body: FutureBuilder<Balance>(
@@ -157,7 +157,7 @@ class _BalancePageState extends State<BalancePage> {
               if (snapshot.data!.future == null && snapshot.data!.stock == null) {
                 return Center(
                   child: Text(
-                    S.of(context).no_data,
+                    AppLocalizations.of(context)!.no_data,
                     style: const TextStyle(
                       fontSize: 30,
                     ),
@@ -201,8 +201,8 @@ class _BalancePageState extends State<BalancePage> {
                             labelStyle: const TextStyle(fontSize: 18),
                             padding: const EdgeInsets.only(top: 5),
                             tabs: [
-                              Tab(text: S.of(context).future),
-                              Tab(text: S.of(context).stock),
+                              Tab(text: AppLocalizations.of(context)!.future),
+                              Tab(text: AppLocalizations.of(context)!.stock),
                             ],
                           ),
                         ),
@@ -227,7 +227,7 @@ class _BalancePageState extends State<BalancePage> {
                                 },
                                 leading: Icon(Icons.account_balance_wallet, color: _balanceColors(futureArr[index].total!)),
                                 title: Text(futureArr[index].tradeDay!.substring(0, 10)),
-                                subtitle: Text('${S.of(context).trade_count}: ${futureArr[index].tradeCount}'),
+                                subtitle: Text('${AppLocalizations.of(context)!.trade_count}: ${futureArr[index].tradeCount}'),
                                 trailing: Text(
                                   commaNumber(futureArr[index].total.toString()),
                                   style: TextStyle(
@@ -246,7 +246,7 @@ class _BalancePageState extends State<BalancePage> {
                               itemBuilder: (context, index) => ListTile(
                                 leading: Icon(Icons.account_balance_wallet, color: _balanceColors(stockArr[index].total!)),
                                 title: Text(stockArr[index].tradeDay!.substring(0, 10)),
-                                subtitle: Text('${S.of(context).trade_count}: ${stockArr[index].tradeCount}'),
+                                subtitle: Text('${AppLocalizations.of(context)!.trade_count}: ${stockArr[index].tradeCount}'),
                                 trailing: Text(
                                   commaNumber(stockArr[index].total.toString()),
                                   style: TextStyle(
@@ -273,7 +273,7 @@ class _BalancePageState extends State<BalancePage> {
                           flex: 4,
                           child: ListTile(
                             title: Text(
-                              S.of(context).latest,
+                              AppLocalizations.of(context)!.latest,
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: SizedBox(
@@ -288,7 +288,7 @@ class _BalancePageState extends State<BalancePage> {
                           flex: 4,
                           child: ListTile(
                             title: Text(
-                              S.of(context).total,
+                              AppLocalizations.of(context)!.total,
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: SizedBox(

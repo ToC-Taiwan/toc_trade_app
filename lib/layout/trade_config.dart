@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
-import 'package:trade_agent/generated/l10n.dart';
 import 'package:trade_agent/modules/api/api.dart';
 
 class TradeConfigPage extends StatefulWidget {
@@ -47,7 +47,7 @@ class _TradeConfigPageState extends State<TradeConfigPage> {
         appBar: AppBar(
           centerTitle: false,
           elevation: 0,
-          title: Text(S.of(context).trade_configuration),
+          title: Text(AppLocalizations.of(context)!.trade_configuration),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.close),
@@ -64,7 +64,7 @@ class _TradeConfigPageState extends State<TradeConfigPage> {
                 final data = snapshot.data!;
                 if (data.simulation == null) {
                   return Text(
-                    S.of(context).no_data,
+                    AppLocalizations.of(context)!.no_data,
                     style: const TextStyle(
                       fontSize: 30,
                     ),
