@@ -20,10 +20,7 @@ class _TradeConfigPageState extends State<TradeConfigPage> {
 
   @override
   void initState() {
-    futureConfig = fetchConfig().then((value) => value).catchError((e) {
-      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-      return Future.value(Config());
-    });
+    futureConfig = fetchConfig();
     super.initState();
   }
 

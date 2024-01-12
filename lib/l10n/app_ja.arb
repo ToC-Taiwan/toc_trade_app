@@ -106,5 +106,6 @@
   "confirm_password": "確認用パスワード",
   "email_cannot_be_empty": "メールアドレスは空白にできません",
   "email_is_invalid": "無効なメールアドレス",
-  "email_address": "メールアドレス"
+  "email_address": "メールアドレス",
+  "please_login_again": "再度ログインしてください"
 }

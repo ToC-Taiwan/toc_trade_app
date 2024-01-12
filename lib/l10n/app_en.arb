@@ -106,5 +106,6 @@
   "confirm_password": "Confirm Password",
   "email_cannot_be_empty": "Email cannot be empty",
   "email_is_invalid": "Email is invalid",
-  "email_address": "Email Address"
+  "email_address": "Email Address",
+  "please_login_again": "Please login again"
 }

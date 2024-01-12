@@ -106,5 +106,6 @@
   "confirm_password": "비밀번호 확인",
   "email_cannot_be_empty": "이메일을 비울 수 없습니다",
   "email_is_invalid": "유효하지 않은 이메일",
-  "email_address": "이메일 주소"
+  "email_address": "이메일 주소",
+  "please_login_again": "다시 로그인하세요"
 }
