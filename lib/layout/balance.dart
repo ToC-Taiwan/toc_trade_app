@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
-import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
@@ -14,8 +13,7 @@ import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
 
 class BalancePage extends StatefulWidget {
-  const BalancePage({required this.db, super.key});
-  final Database db;
+  const BalancePage({super.key});
 
   @override
   State<BalancePage> createState() => _BalancePageState();
@@ -36,7 +34,7 @@ class _BalancePageState extends State<BalancePage> {
   void initState() {
     super.initState();
     futureBalance = fetchBalance();
-    BasicDao(database: widget.db).getBasicByKey('remove_ad_status').then((value) {
+    BasicDao.getBasicByKey('remove_ad_status').then((value) {
       if (value != null) {
         alreadyRemovedAd = value.value == 'true';
       }
@@ -148,7 +146,6 @@ class _BalancePageState extends State<BalancePage> {
         appBar: trAppbar(
           context,
           AppLocalizations.of(context)!.balance,
-          widget.db,
         ),
         body: FutureBuilder<Balance>(
           future: futureBalance,

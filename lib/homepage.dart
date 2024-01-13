@@ -6,7 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
-import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/layout/balance.dart';
 import 'package:trade_agent/layout/future_trade.dart';
@@ -16,9 +15,7 @@ import 'package:trade_agent/layout/targets.dart';
 import 'package:trade_agent/modules/api/api.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({required this.db, super.key});
-
-  final Database db;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -35,21 +32,11 @@ class _MyHomePageState extends State<MyHomePage> {
     checkNotification();
     super.initState();
     pages = [
-      Targetspage(
-        db: widget.db,
-      ),
-      StrategyPage(
-        db: widget.db,
-      ),
-      FutureTradePage(
-        db: widget.db,
-      ),
-      PickStockPage(
-        db: widget.db,
-      ),
-      BalancePage(
-        db: widget.db,
-      ),
+      const Targetspage(),
+      const StrategyPage(),
+      const FutureTradePage(),
+      const PickStockPage(),
+      const BalancePage(),
     ];
   }
 
@@ -119,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       margin: const EdgeInsets.all(8),
       borderRadius: BorderRadius.circular(8),
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 3000),
       titleColor: Colors.grey,
       flushbarPosition: FlushbarPosition.TOP,
       flushbarStyle: FlushbarStyle.FLOATING,

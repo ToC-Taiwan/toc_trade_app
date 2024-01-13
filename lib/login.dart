@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:http/http.dart' as http;
-import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/homepage.dart';
 import 'package:trade_agent/modules/api/api.dart';
@@ -37,10 +36,9 @@ Future<String> login(String userName, String password) async {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({required this.db, required this.screenHeight, super.key});
+  const LoginPage({required this.screenHeight, super.key});
   static const routeName = '/';
 
-  final Database db;
   final double screenHeight;
 
   @override
@@ -234,9 +232,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                             API.setToken(value);
                                             Navigator.of(context).pushAndRemoveUntil(
                                               PageRouteBuilder(
-                                                pageBuilder: (context, animation1, animation2) => MyHomePage(
-                                                  db: widget.db,
-                                                ),
+                                                pageBuilder: (context, animation1, animation2) => const MyHomePage(),
                                                 transitionDuration: Duration.zero,
                                                 reverseTransitionDuration: Duration.zero,
                                               ),

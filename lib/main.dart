@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,10 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/firebase_options.dart';
 import 'package:trade_agent/locale.dart';
@@ -21,42 +18,11 @@ import 'package:trade_agent/version.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final libDic = Platform.isAndroid ? await getApplicationSupportDirectory() : await getLibraryDirectory();
-  final database = await openDatabase(
-    join(libDic.path, 'toc_sqlite.db'),
-    onCreate: (db, version) async {
-      await db.execute('''
-        CREATE TABLE IF NOT EXISTS basic(
-          id INTEGER PRIMARY KEY,
-          key TEXT,
-          value TEXT,
-          createTime INTEGER,
-          updateTime INTEGER)
-        ''');
-      await db.execute(
-        '''
-        CREATE TABLE IF NOT EXISTS pick_stock(
-          id INTEGER PRIMARY KEY,
-          stock_num TEXT,
-          stock_name TEXT,
-          price REAL,
-          price_change_rate REAL,
-          price_change REAL,
-          is_target INTEGER,
-          createTime INTEGER,
-          updateTime INTEGER)
-        ''',
-      );
-    },
-    version: 1,
-  );
-
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // adsense
   await MobileAds.instance.initialize();
   if (kDebugMode) {
     await MobileAds.instance.updateRequestConfiguration(
@@ -70,41 +36,49 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final basicDao = BasicDao(database: database);
-  final version = await basicDao.getBasicByKey('version');
-  if (version == null) {
-    await basicDao.insertBasic(Basic('version', appVersion));
-  } else {
-    version.value = appVersion;
-    await basicDao.updateBasic(version);
-  }
+  await DB.initialize();
 
-  final balanceHigh = await basicDao.getBasicByKey('balance_high');
-  if (balanceHigh == null) {
-    await basicDao.insertBasic(Basic('balance_high', '1'));
-  }
+  await BasicDao.getBasicByKey('version').then((value) async {
+    if (value != null) {
+      if (value.value != appVersion) {
+        value.value = appVersion;
+        await BasicDao.updateBasic(value);
+      }
+    } else {
+      await BasicDao.insertBasic(Basic('version', appVersion));
+    }
+  });
 
-  final balanceLow = await basicDao.getBasicByKey('balance_low');
+  await BasicDao.getBasicByKey('balance_high').then((value) async {
+    if (value == null) {
+      await BasicDao.insertBasic(Basic('balance_high', '1'));
+    }
+  });
+
+  final balanceLow = await BasicDao.getBasicByKey('balance_low');
   if (balanceLow == null) {
-    await basicDao.insertBasic(Basic('balance_low', '-1'));
+    await BasicDao.insertBasic(Basic('balance_low', '-1'));
   }
 
-  final timePeriod = await basicDao.getBasicByKey('time_period');
-  if (timePeriod == null) {
-    await basicDao.insertBasic(Basic('time_period', '5'));
-  }
+  await BasicDao.getBasicByKey('time_period').then((value) async {
+    if (value == null) {
+      await BasicDao.insertBasic(Basic('time_period', '5'));
+    }
+  });
 
-  var dbLanguageSetup = await basicDao.getBasicByKey('language_setup');
-  if (dbLanguageSetup == null) {
-    dbLanguageSetup = Basic('language_setup', 'en');
-    await basicDao.insertBasic(dbLanguageSetup);
-  }
+  Basic dbLanguageSetup = await BasicDao.getBasicByKey('language_setup').then((value) async {
+    if (value != null) {
+      return value;
+    }
+    Basic temp = Basic('language_setup', 'en');
+    await BasicDao.insertBasic(temp);
+    return temp;
+  });
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
     MyApp(
       dbLanguageSetup.value,
-      db: database,
     ),
   );
 }
@@ -114,9 +88,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp(this.languageSetup, {required this.db, super.key});
+  const MyApp(this.languageSetup, {super.key});
 
-  final Database db;
   final String languageSetup;
 
   @override
@@ -154,7 +127,6 @@ class _MyAppState extends State<MyApp> {
           initialRoute: LoginPage.routeName,
           routes: {
             LoginPage.routeName: (context) => LoginPage(
-                  db: widget.db,
                   screenHeight: MediaQuery.of(context).size.height,
                 ),
           },

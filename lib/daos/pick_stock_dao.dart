@@ -2,11 +2,13 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/entity/entity.dart';
 
 class PickStockDao {
-  PickStockDao({
-    this.database,
-  });
+  static Database? database;
 
-  Future<List<PickStock>> getAllPickStock() async {
+  static set setDatabase(Database? db) {
+    database = db;
+  }
+
+  static Future<List<PickStock>> getAllPickStock() async {
     final List<Map<String, dynamic>> maps = await database!.query(
       'pick_stock',
     );
@@ -26,7 +28,7 @@ class PickStockDao {
     });
   }
 
-  Future<void> deletePickStock(PickStock record) async {
+  static Future<void> deletePickStock(PickStock record) async {
     await database!.delete(
       'pick_stock',
       where: 'id = ?',
@@ -34,7 +36,7 @@ class PickStockDao {
     );
   }
 
-  Future<void> updatePickStock(PickStock record) async {
+  static Future<void> updatePickStock(PickStock record) async {
     await database!.update(
       'pick_stock',
       record.toMap(),
@@ -43,19 +45,17 @@ class PickStockDao {
     );
   }
 
-  Future<void> deleteAllPickStock() async {
+  static Future<void> deleteAllPickStock() async {
     await database!.delete(
       'pick_stock',
     );
   }
 
-  Future<void> insertPickStock(PickStock record) async {
+  static Future<void> insertPickStock(PickStock record) async {
     await database!.insert(
       'pick_stock',
       record.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
-
-  Database? database;
 }

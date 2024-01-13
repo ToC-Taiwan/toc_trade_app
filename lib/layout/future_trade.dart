@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
@@ -16,8 +15,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:web_socket_channel/io.dart';
 
 class FutureTradePage extends StatefulWidget {
-  const FutureTradePage({required this.db, super.key});
-  final Database db;
+  const FutureTradePage({super.key});
 
   @override
   State<FutureTradePage> createState() => _FutureTradePageState();
@@ -156,7 +154,6 @@ class _FutureTradePageState extends State<FutureTradePage> {
         appBar: trAppbar(
           context,
           AppLocalizations.of(context)!.future_trade,
-          widget.db,
         ),
         body: SizedBox(
           child: Column(

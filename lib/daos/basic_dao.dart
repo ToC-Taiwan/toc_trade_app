@@ -2,11 +2,13 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/entity/entity.dart';
 
 class BasicDao {
-  BasicDao({
-    this.database,
-  });
+  static Database? database;
 
-  Future<Basic?> getBasicByKey(String key) async {
+  static set setDatabase(Database? db) {
+    database = db;
+  }
+
+  static Future<Basic?> getBasicByKey(String key) async {
     final List<Map<String, dynamic>> maps = await database!.query(
       'basic',
       where: 'key = ?',
@@ -25,7 +27,7 @@ class BasicDao {
     return null;
   }
 
-  Future<void> insertBasic(Basic record) async {
+  static Future<void> insertBasic(Basic record) async {
     await database!.insert(
       'basic',
       record.toMap(),
@@ -33,7 +35,7 @@ class BasicDao {
     );
   }
 
-  Future<void> updateBasic(Basic record) async {
+  static Future<void> updateBasic(Basic record) async {
     await database!.update(
       'basic',
       record.toMap(),
@@ -41,6 +43,4 @@ class BasicDao {
       whereArgs: [record.key],
     );
   }
-
-  Database? database;
 }

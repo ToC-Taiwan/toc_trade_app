@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
-import 'package:sqflite/sqflite.dart';
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
@@ -16,8 +15,7 @@ import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
 
 class Targetspage extends StatefulWidget {
-  const Targetspage({required this.db, super.key});
-  final Database db;
+  const Targetspage({super.key});
 
   @override
   State<Targetspage> createState() => _TargetspageState();
@@ -118,11 +116,11 @@ class _TargetspageState extends State<Targetspage> {
   void initState() {
     super.initState();
     futureTargets = fetchTargets(current, -1);
-    BasicDao(database: widget.db).getBasicByKey('remove_ad_status').then(
-          (value) => {
-            if (value != null) {alreadyRemovedAd = value.value == 'true'},
-          },
-        );
+    BasicDao.getBasicByKey('remove_ad_status').then(
+      (value) => {
+        if (value != null) {alreadyRemovedAd = value.value == 'true'},
+      },
+    );
   }
 
   void _onItemClick(num opt) {
@@ -142,7 +140,6 @@ class _TargetspageState extends State<Targetspage> {
         appBar: trAppbar(
           context,
           AppLocalizations.of(context)!.targets,
-          widget.db,
         ),
         body: SizedBox(
           child: FutureBuilder<List<Target>>(
