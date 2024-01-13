@@ -1,8 +1,7 @@
 import 'dart:convert';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -102,27 +101,66 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _showNotification(BuildContext context, RemoteMessage msg) {
-    ElegantNotification(
+  void _showNotification(BuildContext context, RemoteMessage msg) async {
+    await Flushbar(
+      onTap: (flushbar) {
+        if (msg.data['page_route'] == 'balance') {
+          goToPage(4);
+        } else if (msg.data['page_route'] == 'target') {
+          goToPage(0);
+        } else if (msg.data['page_route'] == 'strategy') {
+          goToPage(1);
+        } else if (msg.data['page_route'] == 'future_trade') {
+          goToPage(2);
+        } else if (msg.data['page_route'] == 'pick_stock') {
+          goToPage(3);
+        }
+        flushbar.dismiss();
+      },
+      margin: const EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+      duration: const Duration(milliseconds: 2000),
+      titleColor: Colors.grey,
+      flushbarPosition: FlushbarPosition.TOP,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      reverseAnimationCurve: Curves.easeInToLinear,
+      forwardAnimationCurve: Curves.easeInToLinear,
+      backgroundColor: Colors.white,
+      leftBarIndicatorColor: Colors.blueGrey,
+      isDismissible: true,
       icon: const Icon(
         Icons.notifications,
         color: Colors.blueGrey,
-        size: 35,
+        size: 30,
       ),
-      width: MediaQuery.of(context).size.width,
-      height: 100,
-      notificationPosition: NotificationPosition.topRight,
-      animation: AnimationType.fromRight,
-      title: Text(
+      titleText: Text(
         msg.notification!.title!,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 16,
+          fontSize: 18.0,
+          color: Colors.grey,
         ),
       ),
-      description: Text(msg.notification!.body!),
-      showProgressIndicator: false,
+      messageText: Text(
+        msg.notification!.body!,
+        style: const TextStyle(
+          fontSize: 16.0,
+          color: Colors.black,
+        ),
+      ),
+      boxShadows: const [
+        BoxShadow(
+          color: Colors.grey,
+          offset: Offset(0.0, 5.0),
+          blurRadius: 10.0,
+        )
+      ],
     ).show(context);
+  }
+
+  void goToPage(int page) {
+    final CurvedNavigationBarState? navBarState = _bottomNavigationKey.currentState;
+    navBarState?.setPage(page);
   }
 
   @override

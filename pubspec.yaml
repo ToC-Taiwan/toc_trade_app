@@ -1,12 +1,13 @@
 name: trade_agent
 description: Status of trade agent, let user query analyzed stocks.
 publish_to: none
-version: 4.0.0+40021
+version: 4.0.0+40022
 
 environment:
   sdk: ">=3.1.2 <4.0.0"
 
 dependencies:
+  another_flushbar: ^1.12.30
   auto_size_text: ^3.0.0
   candlesticks:
     git:
@@ -14,7 +15,6 @@ dependencies:
       url: https://github.com/Chindada/candlesticks.git
   curved_navigation_bar: ^1.0.3
   date_format: ^2.0.7
-  elegant_notification: ^1.11.2
   email_validator: ^2.1.16
   firebase_core: ^2.24.2
   firebase_messaging: ^14.7.10
