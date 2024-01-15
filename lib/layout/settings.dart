@@ -138,283 +138,343 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _pushNotification = false;
   bool _pushNotificationPermamentlyDenied = false;
 
+  ExpansionTileController? controllerA = ExpansionTileController();
+  ExpansionTileController? controllerB = ExpansionTileController();
+  ExpansionTileController? controllerC = ExpansionTileController();
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          centerTitle: false,
-          elevation: 0,
-          title: Text(AppLocalizations.of(context)!.settings),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-          automaticallyImplyLeading: false,
+  Widget build(BuildContext context) {
+    List<Widget> allExpand = [
+      ExpansionTile(
+        controller: controllerA,
+        childrenPadding: const EdgeInsets.only(left: 50),
+        onExpansionChanged: (value) async {
+          if (value) {
+            controllerB!.collapse();
+            controllerC!.collapse();
+            if (_pushNotificationPermamentlyDenied) {
+              return;
+            }
+            bool status = await FCM.checkTokenStatus().then((value) => value);
+            setState(() {
+              _pushNotification = status;
+            });
+          }
+        },
+        leading: const Icon(
+          Icons.notifications,
+          color: Colors.black,
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 14),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              ExpansionTile(
-                childrenPadding: const EdgeInsets.only(left: 50),
-                onExpansionChanged: (value) async {
-                  if (value) {
-                    if (_pushNotificationPermamentlyDenied) {
-                      return;
-                    }
-                    bool status = await FCM.checkTokenStatus().then((value) => value);
-                    setState(() {
-                      _pushNotification = status;
+        title: Text(AppLocalizations.of(context)!.settings_of_notification),
+        children: [
+          SwitchListTile(
+            value: _pushNotification,
+            onChanged: _pushNotificationPermamentlyDenied
+                ? null
+                : (bool? value) async {
+                    await FCM.sendToken(value!).then((_) {
+                      FCM.checkTokenStatus().then((value) {
+                        setState(() {
+                          _pushNotification = value;
+                        });
+                      });
                     });
-                  }
-                },
-                leading: const Icon(
-                  Icons.notifications,
-                  color: Colors.black,
-                ),
-                title: Text(AppLocalizations.of(context)!.settings_of_notification),
-                children: [
-                  SwitchListTile(
-                    value: _pushNotification,
-                    onChanged: _pushNotificationPermamentlyDenied
-                        ? null
-                        : (bool? value) async {
-                            await FCM.sendToken(value!).then((_) {
-                              FCM.checkTokenStatus().then((value) {
-                                setState(() {
-                                  _pushNotification = value;
-                                });
-                              });
-                            });
-                          },
-                    title: Text(AppLocalizations.of(context)!.allow_notification),
-                    subtitle: _pushNotificationPermamentlyDenied
-                        ? Text(
-                            AppLocalizations.of(context)!.please_go_to_settings_to_allow_notification,
-                          )
-                        : null,
-                  )
-                ],
-              ),
-              ExpansionTile(
-                childrenPadding: const EdgeInsets.only(left: 50),
-                maintainState: true,
-                leading: const Icon(
-                  Icons.language,
-                  color: Colors.black,
-                ),
-                title: Text(
-                  AppLocalizations.of(context)!.language,
-                  style: const TextStyle(color: Colors.black),
-                ),
-                children: [
-                  FutureBuilder<Basic?>(
-                    future: languageGroup,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return RadioListTile<String>(
-                          activeColor: Colors.green,
-                          value: 'en',
-                          title: const Text(
-                            'English',
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                          ),
-                          groupValue: snapshot.data!.value,
-                          onChanged: (value) {
-                            setState(() {
-                              snapshot.data!.value = value!;
-                              BasicDao.updateBasic(snapshot.data!);
-                              languageGroup = BasicDao.getBasicByKey('language_setup');
-                              LocaleBloc.changeLocaleFromLanguageSetup(value);
-                            });
-                          },
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      );
-                    },
-                  ),
-                  FutureBuilder<Basic?>(
-                    future: languageGroup,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return RadioListTile<String>(
-                          activeColor: Colors.green,
-                          value: 'zh_Hant_TW',
-                          title: const Text(
-                            '繁體中文',
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                          ),
-                          groupValue: snapshot.data!.value,
-                          onChanged: (value) {
-                            setState(() {
-                              snapshot.data!.value = value!;
-                              BasicDao.updateBasic(snapshot.data!);
-                              languageGroup = BasicDao.getBasicByKey('language_setup');
-                              LocaleBloc.changeLocaleFromLanguageSetup(value);
-                            });
-                          },
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      );
-                    },
-                  ),
-                  FutureBuilder<Basic?>(
-                    future: languageGroup,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return RadioListTile<String>(
-                          activeColor: Colors.green,
-                          value: 'zh_Hans_CN',
-                          title: const Text(
-                            '简体中文',
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                          ),
-                          groupValue: snapshot.data!.value,
-                          onChanged: (value) {
-                            setState(() {
-                              snapshot.data!.value = value!;
-                              BasicDao.updateBasic(snapshot.data!);
-                              languageGroup = BasicDao.getBasicByKey('language_setup');
-                              LocaleBloc.changeLocaleFromLanguageSetup(value);
-                            });
-                          },
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      );
-                    },
-                  ),
-                  FutureBuilder<Basic?>(
-                    future: languageGroup,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return RadioListTile<String>(
-                          activeColor: Colors.green,
-                          value: 'ja',
-                          title: const Text(
-                            '日文',
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                          ),
-                          groupValue: snapshot.data!.value,
-                          onChanged: (value) {
-                            setState(() {
-                              snapshot.data!.value = value!;
-                              BasicDao.updateBasic(snapshot.data!);
-                              languageGroup = BasicDao.getBasicByKey('language_setup');
-                              LocaleBloc.changeLocaleFromLanguageSetup(value);
-                            });
-                          },
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      );
-                    },
-                  ),
-                  FutureBuilder<Basic?>(
-                    future: languageGroup,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return RadioListTile<String>(
-                          activeColor: Colors.green,
-                          value: 'ko',
-                          title: const Text(
-                            '韓文',
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                          ),
-                          groupValue: snapshot.data!.value,
-                          onChanged: (value) {
-                            setState(() {
-                              snapshot.data!.value = value!;
-                              BasicDao.updateBasic(snapshot.data!);
-                              languageGroup = BasicDao.getBasicByKey('language_setup');
-                              LocaleBloc.changeLocaleFromLanguageSetup(value);
-                            });
-                          },
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              _buildRemoveAdTile(),
-              ListTile(
-                leading: const Icon(
-                  Icons.info_rounded,
-                  color: Colors.black,
-                ),
-                title: Text(AppLocalizations.of(context)!.version),
-                trailing: FutureBuilder<Basic?>(
-                  future: futureVersion,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Text(
-                          snapshot.data!.value,
-                          style: const TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                      );
-                    }
-                    return const Text('-');
                   },
-                ),
-              ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 0,
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.settings,
-                  color: Colors.black,
-                ),
-                title: Text(AppLocalizations.of(context)!.trade_configuration),
-                subtitle: Text(AppLocalizations.of(context)!.read_only),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TradeConfigPage()),
-                ),
-              ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 0,
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.settings_accessibility_outlined,
-                  color: Colors.black,
-                ),
-                title: Text(AppLocalizations.of(context)!.about_me),
-                onTap: () {
-                  _launchInWebViewOrVC(Uri(scheme: 'https', path: 'tocandraw.com'));
-                },
-              ),
-            ],
-          ),
+            title: Text(AppLocalizations.of(context)!.allow_notification),
+            subtitle: _pushNotificationPermamentlyDenied
+                ? Text(
+                    AppLocalizations.of(context)!.please_go_to_settings_to_allow_notification,
+                  )
+                : null,
+          )
+        ],
+      ),
+      ExpansionTile(
+        controller: controllerB,
+        onExpansionChanged: (value) async {
+          if (value) {
+            controllerA!.collapse();
+            controllerC!.collapse();
+          }
+        },
+        childrenPadding: const EdgeInsets.only(left: 50),
+        maintainState: true,
+        leading: const Icon(
+          Icons.language,
+          color: Colors.black,
         ),
-      );
+        title: Text(
+          AppLocalizations.of(context)!.language,
+          style: const TextStyle(color: Colors.black),
+        ),
+        children: [
+          FutureBuilder<Basic?>(
+            future: languageGroup,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return RadioListTile<String>(
+                  activeColor: Colors.green,
+                  value: 'en',
+                  title: const Text(
+                    'English',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  groupValue: snapshot.data!.value,
+                  onChanged: (value) {
+                    setState(() {
+                      snapshot.data!.value = value!;
+                      BasicDao.updateBasic(snapshot.data!);
+                      languageGroup = BasicDao.getBasicByKey('language_setup');
+                      LocaleBloc.changeLocaleFromLanguageSetup(value);
+                    });
+                  },
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              );
+            },
+          ),
+          FutureBuilder<Basic?>(
+            future: languageGroup,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return RadioListTile<String>(
+                  activeColor: Colors.green,
+                  value: 'zh_Hant_TW',
+                  title: const Text(
+                    '繁體中文',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  groupValue: snapshot.data!.value,
+                  onChanged: (value) {
+                    setState(() {
+                      snapshot.data!.value = value!;
+                      BasicDao.updateBasic(snapshot.data!);
+                      languageGroup = BasicDao.getBasicByKey('language_setup');
+                      LocaleBloc.changeLocaleFromLanguageSetup(value);
+                    });
+                  },
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              );
+            },
+          ),
+          FutureBuilder<Basic?>(
+            future: languageGroup,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return RadioListTile<String>(
+                  activeColor: Colors.green,
+                  value: 'zh_Hans_CN',
+                  title: const Text(
+                    '简体中文',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  groupValue: snapshot.data!.value,
+                  onChanged: (value) {
+                    setState(() {
+                      snapshot.data!.value = value!;
+                      BasicDao.updateBasic(snapshot.data!);
+                      languageGroup = BasicDao.getBasicByKey('language_setup');
+                      LocaleBloc.changeLocaleFromLanguageSetup(value);
+                    });
+                  },
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              );
+            },
+          ),
+          FutureBuilder<Basic?>(
+            future: languageGroup,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return RadioListTile<String>(
+                  activeColor: Colors.green,
+                  value: 'ja',
+                  title: const Text(
+                    '日文',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  groupValue: snapshot.data!.value,
+                  onChanged: (value) {
+                    setState(() {
+                      snapshot.data!.value = value!;
+                      BasicDao.updateBasic(snapshot.data!);
+                      languageGroup = BasicDao.getBasicByKey('language_setup');
+                      LocaleBloc.changeLocaleFromLanguageSetup(value);
+                    });
+                  },
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              );
+            },
+          ),
+          FutureBuilder<Basic?>(
+            future: languageGroup,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return RadioListTile<String>(
+                  activeColor: Colors.green,
+                  value: 'ko',
+                  title: const Text(
+                    '韓文',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  groupValue: snapshot.data!.value,
+                  onChanged: (value) {
+                    setState(() {
+                      snapshot.data!.value = value!;
+                      BasicDao.updateBasic(snapshot.data!);
+                      languageGroup = BasicDao.getBasicByKey('language_setup');
+                      LocaleBloc.changeLocaleFromLanguageSetup(value);
+                    });
+                  },
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      Platform.isAndroid
+          ? ExpansionTile(
+              onExpansionChanged: (value) async {
+                if (value) {
+                  controllerA!.collapse();
+                  controllerB!.collapse();
+                }
+              },
+              controller: controllerC,
+              leading: const Icon(
+                Icons.workspace_premium,
+                color: Colors.black,
+              ),
+              title: Text(
+                AppLocalizations.of(context)!.developing,
+                style: const TextStyle(color: Colors.black),
+              ),
+            )
+          : ExpansionTile(
+              controller: controllerC,
+              onExpansionChanged: (value) async {
+                if (value) {
+                  controllerA!.collapse();
+                  controllerB!.collapse();
+                }
+              },
+              childrenPadding: const EdgeInsets.only(left: 50),
+              leading: const Icon(
+                Icons.remove_circle,
+                color: Colors.black,
+              ),
+              title: Text(
+                AppLocalizations.of(context)!.remove_ads,
+                style: const TextStyle(color: Colors.black),
+              ),
+              children: [
+                _buildProductList(),
+                _buildRestoreButton(),
+                const SizedBox(
+                  height: 15,
+                ),
+              ],
+            ),
+      ListTile(
+        leading: const Icon(
+          Icons.info_rounded,
+          color: Colors.black,
+        ),
+        title: Text(AppLocalizations.of(context)!.version),
+        trailing: FutureBuilder<Basic?>(
+          future: futureVersion,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(
+                  snapshot.data!.value,
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              );
+            }
+            return const Text('-');
+          },
+        ),
+      ),
+      const Divider(
+        color: Colors.grey,
+        thickness: 0,
+      ),
+      ListTile(
+        leading: const Icon(
+          Icons.settings,
+          color: Colors.black,
+        ),
+        title: Text(AppLocalizations.of(context)!.trade_configuration),
+        subtitle: Text(AppLocalizations.of(context)!.read_only),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TradeConfigPage()),
+        ),
+      ),
+      const Divider(
+        color: Colors.grey,
+        thickness: 0,
+      ),
+      ListTile(
+        leading: const Icon(
+          Icons.settings_accessibility_outlined,
+          color: Colors.black,
+        ),
+        title: Text(AppLocalizations.of(context)!.about_me),
+        onTap: () {
+          _launchInWebViewOrVC(Uri(scheme: 'https', path: 'tocandraw.com'));
+        },
+      ),
+    ];
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: false,
+        elevation: 0,
+        title: Text(AppLocalizations.of(context)!.settings),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+        automaticallyImplyLeading: false,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 14),
+        child: ListView(
+          shrinkWrap: true,
+          children: allExpand,
+        ),
+      ),
+    );
+  }
 
   Column _buildProductList() {
     if (_loading) {
@@ -541,41 +601,6 @@ class _SettingsPageState extends State<SettingsPage> {
         await _inAppPurchase.completePurchase(purchaseDetails);
       }
     }
-  }
-
-  ExpansionTile _buildRemoveAdTile() {
-    if (Platform.isAndroid) {
-      return ExpansionTile(
-        maintainState: true,
-        leading: const Icon(
-          Icons.workspace_premium,
-          color: Colors.black,
-        ),
-        title: Text(
-          AppLocalizations.of(context)!.developing,
-          style: const TextStyle(color: Colors.black),
-        ),
-      );
-    }
-    return ExpansionTile(
-      childrenPadding: const EdgeInsets.only(left: 50),
-      maintainState: true,
-      leading: const Icon(
-        Icons.remove_circle,
-        color: Colors.black,
-      ),
-      title: Text(
-        AppLocalizations.of(context)!.remove_ads,
-        style: const TextStyle(color: Colors.black),
-      ),
-      children: [
-        _buildProductList(),
-        _buildRestoreButton(),
-        const SizedBox(
-          height: 15,
-        ),
-      ],
-    );
   }
 }
 
