@@ -49,8 +49,8 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     if (await Permission.notification.status.isPermanentlyDenied) {
+      await FCM.sendToken(false);
       setState(() {
-        _pushNotification = false;
         _pushNotificationPermamentlyDenied = true;
       });
     } else {
@@ -182,20 +182,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     onChanged: _pushNotificationPermamentlyDenied
                         ? null
                         : (bool? value) async {
-                            if (value == null) {
-                              return;
-                            }
-                            FCM.sendToken(value);
+                            FCM.sendToken(value!);
                             await FCM.checkTokenStatus().then((value) {
                               setState(() {
                                 _pushNotification = value;
                               });
                             });
                           },
-                    title: const Text('Allow Notification'),
+                    title: Text(AppLocalizations.of(context)!.allow_notification),
                     subtitle: _pushNotificationPermamentlyDenied
-                        ? const Text(
-                            'Please go to setting to allow notification',
+                        ? Text(
+                            AppLocalizations.of(context)!.please_go_to_settings_to_allow_notification,
                           )
                         : null,
                   )

@@ -107,5 +107,7 @@
   "email_cannot_be_empty": "メールアドレスは空白にできません",
   "email_is_invalid": "無効なメールアドレス",
   "email_address": "メールアドレス",
-  "please_login_again": "再度ログインしてください"
+  "please_login_again": "再度ログインしてください",
+  "allow_notification": "通知を許可する",
+  "please_go_to_settings_to_allow_notification": "通知を許可するために設定に移動してください"
 }

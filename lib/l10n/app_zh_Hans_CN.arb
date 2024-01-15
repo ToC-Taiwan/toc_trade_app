@@ -107,5 +107,7 @@
   "email_cannot_be_empty": "Email 不能空白",
   "email_is_invalid": "Email 格式错误",
   "email_address": "Email 地址",
-  "please_login_again": "请重新登录"
+  "please_login_again": "请重新登录",
+  "allow_notification": "允许通知",
+  "please_go_to_settings_to_allow_notification": "请前往设置以允许通知"
 }

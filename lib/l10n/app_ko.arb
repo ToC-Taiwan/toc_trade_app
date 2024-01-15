@@ -107,5 +107,7 @@
   "email_cannot_be_empty": "이메일을 비울 수 없습니다",
   "email_is_invalid": "유효하지 않은 이메일",
   "email_address": "이메일 주소",
-  "please_login_again": "다시 로그인하세요"
+  "please_login_again": "다시 로그인하세요",
+  "allow_notification": "통지 허용",
+  "please_go_to_settings_to_allow_notification": "알림 허용을 위해 설정으로 이동하십시오"
 }

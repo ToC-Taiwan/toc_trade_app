@@ -107,5 +107,7 @@
   "email_cannot_be_empty": "Email cannot be empty",
   "email_is_invalid": "Email is invalid",
   "email_address": "Email Address",
-  "please_login_again": "Please login again"
+  "please_login_again": "Please login again",
+  "allow_notification": "Allow Notification",
+  "please_go_to_settings_to_allow_notification": "Please go to setting to allow notification"
 }
