@@ -82,6 +82,9 @@ class _SettingsPageState extends State<SettingsPage> {
     final isAvailable = await _inAppPurchase.isAvailable();
     if (!isAvailable) {
       setState(() {
+        if (!mounted) {
+          return;
+        }
         _isAvailable = isAvailable;
         _products = <ProductDetails>[];
         _purchases = <PurchaseDetails>[];
@@ -99,6 +102,9 @@ class _SettingsPageState extends State<SettingsPage> {
     final productDetailResponse = await _inAppPurchase.queryProductDetails(_kProductIds.toSet());
     if (productDetailResponse.error != null) {
       setState(() {
+        if (!mounted) {
+          return;
+        }
         _isAvailable = isAvailable;
         _products = productDetailResponse.productDetails;
         _purchases = <PurchaseDetails>[];
@@ -110,6 +116,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (productDetailResponse.productDetails.isEmpty) {
       setState(() {
+        if (!mounted) {
+          return;
+        }
         _isAvailable = isAvailable;
         _products = productDetailResponse.productDetails;
         _purchases = <PurchaseDetails>[];
@@ -120,6 +129,9 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     setState(() {
+      if (!mounted) {
+        return;
+      }
       _isAvailable = isAvailable;
       _products = productDetailResponse.productDetails;
       _notFoundIds = productDetailResponse.notFoundIDs;
