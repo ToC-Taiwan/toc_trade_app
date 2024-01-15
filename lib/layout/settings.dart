@@ -182,10 +182,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     onChanged: _pushNotificationPermamentlyDenied
                         ? null
                         : (bool? value) async {
-                            FCM.sendToken(value!);
-                            await FCM.checkTokenStatus().then((value) {
-                              setState(() {
-                                _pushNotification = value;
+                            await FCM.sendToken(value!).then((_) {
+                              FCM.checkTokenStatus().then((value) {
+                                setState(() {
+                                  _pushNotification = value;
+                                });
                               });
                             });
                           },
