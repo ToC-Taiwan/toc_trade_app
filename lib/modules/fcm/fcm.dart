@@ -30,6 +30,11 @@ class FCM {
       badge: true,
       sound: true,
     );
+    await FirebaseMessaging.instance.subscribeToTopic('announcement');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      showNotification(routingKey.currentContext!, message);
+    });
+
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       if (firstLaunch) {
         await sendToken(true);
@@ -42,6 +47,8 @@ class FCM {
   static get getBottomNavigationKey {
     return routingKey;
   }
+
+  static bool allowPush = false;
 
   static Future<void> sendToken(bool enabled) async {
     final resp = await http.put(
@@ -59,16 +66,7 @@ class FCM {
     if (resp.statusCode != 200) {
       return;
     }
-
-    if (enabled) {
-      await FirebaseMessaging.instance.subscribeToTopic('announcement');
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        showNotification(routingKey.currentContext!, message);
-      });
-    } else {
-      await FirebaseMessaging.instance.unsubscribeFromTopic('announcement');
-      FirebaseMessaging.onMessage.listen(null);
-    }
+    allowPush = enabled;
   }
 
   static Future<bool> checkTokenStatus() async {
@@ -95,6 +93,10 @@ class FCM {
   }
 
   static void showNotification(BuildContext context, RemoteMessage msg) async {
+    if (!allowPush) {
+      return;
+    }
+
     await Flushbar(
       onTap: (flushbar) {
         if (msg.data['page_route'] == 'target') {
