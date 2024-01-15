@@ -6,10 +6,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:trade_agent/daos/daos.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/trade_config.dart';
 import 'package:trade_agent/locale.dart';
+import 'package:trade_agent/modules/fcm/fcm.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -41,11 +43,32 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _isAvailable = false;
   bool _loading = true;
 
+  void checkPushIsPermantlyDenied() async {
+    if (!mounted) {
+      return;
+    }
+
+    if (await Permission.notification.status.isPermanentlyDenied) {
+      setState(() {
+        _pushNotification = false;
+        _pushNotificationPermamentlyDenied = true;
+      });
+    } else {
+      setState(() {
+        _pushNotificationPermamentlyDenied = false;
+      });
+    }
+  }
+
   @override
   void initState() {
+    super.initState();
+    checkPushIsPermantlyDenied();
+    AppLifecycleListener(
+      onResume: () => checkPushIsPermantlyDenied(),
+    );
     _inAppPurchase.purchaseStream.listen(_listenToPurchaseUpdated);
     initStoreInfo();
-    super.initState();
     languageGroup = BasicDao.getBasicByKey('language_setup');
     futureVersion = BasicDao.getBasicByKey('version');
     BasicDao.getBasicByKey('remove_ad_status').then(
@@ -112,6 +135,9 @@ class _SettingsPageState extends State<SettingsPage> {
     super.dispose();
   }
 
+  bool _pushNotification = false;
+  bool _pushNotificationPermamentlyDenied = false;
+
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.white,
@@ -129,13 +155,52 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         body: Padding(
           padding: const EdgeInsets.only(top: 14),
-          child: Column(
+          child: ListView(
+            shrinkWrap: true,
             children: [
-              // ListTile(
-              //   leading: const Icon(Icons.notifications),
-              //   title: Text(AppLocalizations.of(context)!.settings_of_notification),
-              //   trailing: const Icon(Icons.keyboard_arrow_right),
-              // ),
+              ExpansionTile(
+                childrenPadding: const EdgeInsets.only(left: 50),
+                onExpansionChanged: (value) async {
+                  if (value) {
+                    if (_pushNotificationPermamentlyDenied) {
+                      return;
+                    }
+                    bool status = await FCM.checkTokenStatus().then((value) => value);
+                    setState(() {
+                      _pushNotification = status;
+                    });
+                  }
+                },
+                leading: const Icon(
+                  Icons.notifications,
+                  color: Colors.black,
+                ),
+                title: Text(AppLocalizations.of(context)!.settings_of_notification),
+                children: [
+                  SwitchListTile(
+                    value: _pushNotification,
+                    onChanged: _pushNotificationPermamentlyDenied
+                        ? null
+                        : (bool? value) async {
+                            if (value == null) {
+                              return;
+                            }
+                            FCM.sendToken(value);
+                            await FCM.checkTokenStatus().then((value) {
+                              setState(() {
+                                _pushNotification = value;
+                              });
+                            });
+                          },
+                    title: const Text('Allow Notification'),
+                    subtitle: _pushNotificationPermamentlyDenied
+                        ? const Text(
+                            'Please go to setting to allow notification',
+                          )
+                        : null,
+                  )
+                ],
+              ),
               ExpansionTile(
                 childrenPadding: const EdgeInsets.only(left: 50),
                 maintainState: true,
@@ -147,7 +212,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   AppLocalizations.of(context)!.language,
                   style: const TextStyle(color: Colors.black),
                 ),
-                trailing: const Icon(Icons.keyboard_arrow_right),
                 children: [
                   FutureBuilder<Basic?>(
                     future: languageGroup,
@@ -339,14 +403,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 color: Colors.grey,
                 thickness: 0,
               ),
-
               ListTile(
                 leading: const Icon(
                   Icons.settings_accessibility_outlined,
                   color: Colors.black,
                 ),
                 title: Text(AppLocalizations.of(context)!.about_me),
-                // trailing: const Icon(Icons.keyboard_arrow_right),
                 onTap: () {
                   _launchInWebViewOrVC(Uri(scheme: 'https', path: 'tocandraw.com'));
                 },
@@ -508,7 +570,6 @@ class _SettingsPageState extends State<SettingsPage> {
         AppLocalizations.of(context)!.remove_ads,
         style: const TextStyle(color: Colors.black),
       ),
-      trailing: const Icon(Icons.keyboard_arrow_right),
       children: [
         _buildProductList(),
         _buildRestoreButton(),
