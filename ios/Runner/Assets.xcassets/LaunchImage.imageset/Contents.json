@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "cover.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
