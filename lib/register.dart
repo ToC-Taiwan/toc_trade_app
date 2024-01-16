@@ -37,6 +37,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
 
   @override
   void initState() {
+    super.initState();
     _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     _animation = Tween<double>(begin: widget.screenHeight * 0.15, end: widget.screenHeight * 0.05).animate(_controller);
 
@@ -50,7 +51,6 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
         }
       });
     });
-    super.initState();
   }
 
   @override

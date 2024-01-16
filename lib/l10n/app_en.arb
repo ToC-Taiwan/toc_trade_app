@@ -28,7 +28,6 @@
   "about_me": "About Me",
   "terms_and_conditions_of_use": "Terms and Conditions of Use",
   "notification": "Notification",
-  "settings_of_notification": "Settings of Notification",
   "trade_configuration": "Trade Configuration",
   "group": "Group",
   "date": "Date",
@@ -100,7 +99,6 @@
   "dismiss": "Dismiss",
   "username_minimum_length_is_8": "Username minimum length is 8",
   "password_minimum_length_is_8": "Password minimum length is 8",
-  "username_already_exists": "Username already exists",
   "confirm_password_cannot_be_empty": "Confirm password cannot be empty",
   "confirm_password_is_not_same_as_password": "Confirm password is not same as password",
   "confirm_password": "Confirm Password",
@@ -109,5 +107,10 @@
   "email_address": "Email Address",
   "please_login_again": "Please login again",
   "allow_notification": "Allow Notification",
-  "please_go_to_settings_to_allow_notification": "Please go to setting to allow notification"
+  "please_go_to_settings_to_allow_notification": "Please go to setting to allow notification",
+  "username_already_exists": "Username already exists",
+  "user_not_found": "User not found",
+  "password_not_match": "Password not match",
+  "email_not_verified": "Email not verified",
+  "email_already_exists": "Email already exists"
 }

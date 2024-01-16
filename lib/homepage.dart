@@ -31,8 +31,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    checkNotification();
     super.initState();
+    checkNotification();
   }
 
   Future<String> refreshToken() async {
@@ -77,7 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
           animationDuration: const Duration(milliseconds: 150),
           onTap: (index) {
             if (DateTime.now().difference(_lastFreshTime).inMinutes > 1) {
-              refreshToken().then((value) => API.setToken(value)).catchError((e) {
+              refreshToken().then((value) {
+                API.token = value;
+              }).catchError((e) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/',

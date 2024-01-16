@@ -177,7 +177,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Icons.notifications,
           color: Colors.black,
         ),
-        title: Text(AppLocalizations.of(context)!.settings_of_notification),
+        title: Text(AppLocalizations.of(context)!.notification),
         children: [
           SwitchListTile(
             value: _pushNotification,

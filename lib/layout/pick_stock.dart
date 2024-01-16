@@ -27,9 +27,9 @@ class _PickStockPageState extends State<PickStockPage> {
 
   @override
   void initState() {
+    super.initState();
     stockArray = PickStockDao.getAllPickStock();
     initialWS();
-    super.initState();
   }
 
   @override

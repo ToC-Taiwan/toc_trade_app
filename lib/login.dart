@@ -10,31 +10,6 @@ import 'package:trade_agent/homepage.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/register.dart';
 
-Future<String> login(String userName, String password) async {
-  try {
-    var loginBody = {
-      'username': userName,
-      'password': password,
-    };
-
-    final response = await http.post(
-      Uri.parse('$tradeAgentURLPrefix/login'),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode(loginBody),
-    );
-    if (response.statusCode == 200) {
-      final result = jsonDecode(response.body) as Map<String, dynamic>;
-      return result['token'];
-    } else {
-      return '';
-    }
-  } on Exception {
-    return '';
-  }
-}
-
 class LoginPage extends StatefulWidget {
   const LoginPage({required this.screenHeight, super.key});
   static const routeName = '/';
@@ -56,17 +31,53 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   String password = '';
 
   bool passwordIsObscure = true;
-  bool inputing = false;
+
+  Future<String> login(String userName, String password) async {
+    try {
+      var loginBody = {
+        'username': userName,
+        'password': password,
+      };
+      final response = await http.post(
+        Uri.parse('$tradeAgentURLPrefix/login'),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(loginBody),
+      );
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        return result['token'];
+      } else {
+        throw codeToLoginFailMsg(result['code'] as int);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  String codeToLoginFailMsg(int code) {
+    switch (code) {
+      case -1001:
+        return AppLocalizations.of(context)!.user_not_found;
+      case -1002:
+        return AppLocalizations.of(context)!.password_not_match;
+      case -1003:
+        return AppLocalizations.of(context)!.email_not_verified;
+      default:
+        return AppLocalizations.of(context)!.login_failed;
+    }
+  }
 
   @override
   void initState() {
+    super.initState();
     _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     _animation = Tween<double>(begin: widget.screenHeight * 0.7, end: widget.screenHeight * 0.3).animate(_controller);
 
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
       setState(() {
-        inputing = visible;
         if (visible) {
           _controller.forward();
         } else {
@@ -74,7 +85,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         }
       });
     });
-    super.initState();
   }
 
   @override
@@ -226,32 +236,32 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                       if (!_formkey.currentState!.validate()) {
                                         return;
                                       }
+                                      FocusScopeNode currentFocus = FocusScope.of(context);
+                                      currentFocus.unfocus();
                                       login(username, password).then(
                                         (value) {
-                                          if (value.isNotEmpty) {
-                                            API.setToken(value);
-                                            Navigator.of(context).pushAndRemoveUntil(
-                                              PageRouteBuilder(
-                                                pageBuilder: (context, animation1, animation2) => const MyHomePage(),
-                                                transitionDuration: Duration.zero,
-                                                reverseTransitionDuration: Duration.zero,
-                                              ),
-                                              (route) => false,
-                                            );
-                                          } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  AppLocalizations.of(context)!.login_failed,
-                                                  style: const TextStyle(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          }
+                                          API.token = value;
+                                          Navigator.of(context).pushAndRemoveUntil(
+                                            PageRouteBuilder(
+                                              pageBuilder: (context, animation1, animation2) => const MyHomePage(),
+                                              transitionDuration: Duration.zero,
+                                              reverseTransitionDuration: Duration.zero,
+                                            ),
+                                            (route) => false,
+                                          );
                                         },
-                                      );
+                                      ).catchError((e) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              e.toString(),
+                                              style: const TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      });
                                     },
                                     child: Text(
                                       AppLocalizations.of(context)!.login,

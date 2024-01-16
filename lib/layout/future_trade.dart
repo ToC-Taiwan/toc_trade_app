@@ -40,9 +40,9 @@ class _FutureTradePageState extends State<FutureTradePage> {
 
   @override
   void initState() {
-    initialWS();
-    Wakelock.enable();
     super.initState();
+    Wakelock.enable();
+    initialWS();
   }
 
   @override

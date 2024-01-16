@@ -20,8 +20,8 @@ class _TradeConfigPageState extends State<TradeConfigPage> {
 
   @override
   void initState() {
-    futureConfig = fetchConfig();
     super.initState();
+    futureConfig = fetchConfig();
   }
 
   Future<Config> fetchConfig() async {

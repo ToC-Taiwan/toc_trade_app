@@ -1,7 +1,11 @@
 class API {
-  static String token = '';
+  static String jwt = '';
 
-  static void setToken(String token) {
-    API.token = token;
+  static set token(String token) {
+    jwt = token;
+  }
+
+  static String get token {
+    return jwt;
   }
 }

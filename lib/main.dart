@@ -83,6 +83,7 @@ void main() async {
   );
 }
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 }
@@ -101,8 +102,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    locale = LocaleBloc.splitLanguage(widget.languageSetup);
     super.initState();
+    locale = LocaleBloc.splitLanguage(widget.languageSetup);
   }
 
   @override
