@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:trade_agent/daos/daos.dart';
@@ -77,11 +76,6 @@ void main() async {
   });
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FlutterAppBadger.isAppBadgeSupported().then((value) {
-    if (value) {
-      FlutterAppBadger.removeBadge();
-    }
-  });
   runApp(
     MyApp(
       dbLanguageSetup.value,
@@ -91,7 +85,9 @@ void main() async {
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class MyApp extends StatefulWidget {

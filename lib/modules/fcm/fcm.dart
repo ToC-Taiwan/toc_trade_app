@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -13,11 +14,18 @@ import 'package:trade_agent/modules/api/api.dart';
 class FCM {
   static final GlobalKey<CurvedNavigationBarState> routingKey = GlobalKey();
   static final FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  static bool authorizationStatus = false;
+  static bool firstLaunch = false;
   static String token = '';
 
   static initialize() async {
-    bool firstLaunch = false;
-    await messaging.getToken().then((value) => token = value!).then((value) async {
+    if (!Platform.isIOS && !Platform.isAndroid) {
+      return;
+    }
+    await messaging.getToken().then((value) {
+      token = value!;
+    }).then((value) async {
       await BasicDao.getBasicByKey("fcm_token").then((value) {
         if (value == null) {
           firstLaunch = true;
@@ -25,22 +33,29 @@ class FCM {
         }
       });
     });
-    NotificationSettings settings = await messaging.requestPermission(
+    await messaging
+        .requestPermission(
       alert: true,
       badge: true,
       sound: true,
-    );
-    await FirebaseMessaging.instance.subscribeToTopic('announcement');
+    )
+        .then((value) {
+      authorizationStatus = value.authorizationStatus == AuthorizationStatus.authorized;
+    });
+  }
+
+  static refresh() async {
+    if (!authorizationStatus) {
+      return;
+    }
+    FirebaseMessaging.instance.subscribeToTopic('announcement');
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       showNotification(routingKey.currentContext!, message);
     });
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      if (firstLaunch) {
-        await sendToken(true);
-      } else {
-        await sendToken(await checkTokenStatus());
-      }
+    if (firstLaunch) {
+      sendToken(true);
+    } else {
+      sendToken(await checkTokenStatus());
     }
   }
 
@@ -51,6 +66,10 @@ class FCM {
   static bool allowPush = false;
 
   static Future<void> sendToken(bool enabled) async {
+    if (token.isEmpty) {
+      return;
+    }
+
     final resp = await http.put(
       Uri.parse('$tradeAgentURLPrefix/user/push-token'),
       headers: {
@@ -70,6 +89,10 @@ class FCM {
   }
 
   static Future<bool> checkTokenStatus() async {
+    if (token.isEmpty) {
+      return false;
+    }
+
     final resp = await http.get(
       Uri.parse('$tradeAgentURLPrefix/user/push-token'),
       headers: {

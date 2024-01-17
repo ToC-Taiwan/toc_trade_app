@@ -4,10 +4,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/homepage.dart';
 import 'package:trade_agent/modules/api/api.dart';
+import 'package:trade_agent/modules/fcm/fcm.dart';
 import 'package:trade_agent/register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -31,6 +33,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   String password = '';
 
   bool passwordIsObscure = true;
+  bool logining = false;
 
   Future<String> login(String userName, String password) async {
     try {
@@ -92,6 +95,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     _controller.dispose();
     keyboardSubscription.cancel();
     super.dispose();
+  }
+
+  Future<void> checkNotification() async {
+    await FCM.initialize();
   }
 
   @override
@@ -236,21 +243,29 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                       if (!_formkey.currentState!.validate()) {
                                         return;
                                       }
+                                      setState(() {
+                                        logining = true;
+                                      });
                                       FocusScopeNode currentFocus = FocusScope.of(context);
                                       currentFocus.unfocus();
                                       login(username, password).then(
                                         (value) {
                                           API.token = value;
-                                          Navigator.of(context).pushAndRemoveUntil(
-                                            PageRouteBuilder(
-                                              pageBuilder: (context, animation1, animation2) => const MyHomePage(),
-                                              transitionDuration: Duration.zero,
-                                              reverseTransitionDuration: Duration.zero,
-                                            ),
-                                            (route) => false,
-                                          );
+                                          checkNotification().then((_) {
+                                            Navigator.of(context).pushAndRemoveUntil(
+                                              PageRouteBuilder(
+                                                pageBuilder: (context, animation1, animation2) => const MyHomePage(),
+                                                transitionDuration: Duration.zero,
+                                                reverseTransitionDuration: Duration.zero,
+                                              ),
+                                              (route) => false,
+                                            );
+                                          });
                                         },
                                       ).catchError((e) {
+                                        setState(() {
+                                          logining = false;
+                                        });
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(
                                             content: Text(
@@ -263,10 +278,15 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                         );
                                       });
                                     },
-                                    child: Text(
-                                      AppLocalizations.of(context)!.login,
-                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                                    ),
+                                    child: logining
+                                        ? const SpinKitWave(
+                                            color: Colors.white60,
+                                            size: 20,
+                                          )
+                                        : Text(
+                                            AppLocalizations.of(context)!.login,
+                                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                          ),
                                   ),
                                 ),
                                 Container(
@@ -277,27 +297,34 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(screenHeight: widget.screenHeight),
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          const begin = Offset(0, 1);
-                                          const end = Offset.zero;
-                                          const curve = Curves.ease;
+                                    onPressed: logining
+                                        ? null
+                                        : () {
+                                            Navigator.of(context).push(PageRouteBuilder(
+                                              pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(screenHeight: widget.screenHeight),
+                                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                                const begin = Offset(0, 1);
+                                                const end = Offset.zero;
+                                                const curve = Curves.ease;
 
-                                          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ));
-                                    },
-                                    child: Text(
-                                      AppLocalizations.of(context)!.register,
-                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                                    ),
+                                                return SlideTransition(
+                                                  position: animation.drive(tween),
+                                                  child: child,
+                                                );
+                                              },
+                                            ));
+                                          },
+                                    child: logining
+                                        ? const SpinKitWave(
+                                            color: Colors.white60,
+                                            size: 20,
+                                          )
+                                        : Text(
+                                            AppLocalizations.of(context)!.register,
+                                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                          ),
                                   ),
                                 ),
                               ],

@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    checkNotification();
+    FCM.refresh();
   }
 
   Future<String> refreshToken() async {
@@ -47,10 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     final result = jsonDecode(response.body) as Map<String, dynamic>;
     return result['token'];
-  }
-
-  void checkNotification() async {
-    await FCM.initialize();
   }
 
   final _bottomNavigationKey = FCM.getBottomNavigationKey;

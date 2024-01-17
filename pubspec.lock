@@ -231,14 +231,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_app_badger:
-    dependency: "direct main"
-    description:
-      name: flutter_app_badger
-      sha256: "64d4a279bab862ed28850431b9b446b9820aaae0bf363322d51077419f930fa8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:
@@ -308,6 +300,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_spinkit:
+    dependency: "direct main"
+    description:
+      name: flutter_spinkit
+      sha256: b39c753e909d4796906c5696a14daf33639a76e017136c8d82bf3e620ce5bb8e
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:

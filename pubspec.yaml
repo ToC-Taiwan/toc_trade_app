@@ -1,7 +1,7 @@
 name: trade_agent
 description: Status of trade agent, let user query analyzed stocks.
 publish_to: none
-version: 4.0.9+40033
+version: 4.0.10+40034
 
 environment:
   sdk: ">=3.1.2 <4.0.0"
@@ -20,10 +20,10 @@ dependencies:
   firebase_messaging: ^14.7.10
   flutter:
     sdk: flutter
-  flutter_app_badger: ^1.5.0
   flutter_keyboard_visibility: ^6.0.0
   flutter_localizations:
     sdk: flutter
+  flutter_spinkit: ^5.2.0
   flutter_staggered_grid_view: ^0.7.0
   google_fonts: ^6.0.0
   google_mobile_ads: ^4.0.0
