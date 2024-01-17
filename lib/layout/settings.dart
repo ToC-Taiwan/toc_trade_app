@@ -7,7 +7,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/trade_config.dart';
 import 'package:trade_agent/locale.dart';

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:trade_agent/constant/constant.dart';
-import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/kbar.dart';
 import 'package:trade_agent/modules/api/api.dart';

@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
-import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/orders.dart';
 import 'package:trade_agent/modules/api/api.dart';

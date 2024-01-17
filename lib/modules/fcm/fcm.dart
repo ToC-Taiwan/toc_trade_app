@@ -7,7 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
-import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/basic.dart';
 import 'package:trade_agent/modules/api/api.dart';
 

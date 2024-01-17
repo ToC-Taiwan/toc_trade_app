@@ -4,7 +4,11 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/daos/basic_dao.dart';
+import 'package:trade_agent/daos/pick_stock_dao.dart';
+
+export 'basic_dao.dart';
+export 'pick_stock_dao.dart';
 
 class DB {
   static Database? db;

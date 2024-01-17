@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 import 'package:trade_agent/constant/constant.dart';
-import 'package:trade_agent/daos/daos.dart';
+import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/app_bar.dart';
