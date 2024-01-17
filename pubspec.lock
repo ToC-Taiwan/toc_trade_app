@@ -122,6 +122,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  cronet_http:
+    dependency: "direct main"
+    description:
+      name: cronet_http
+      sha256: "089f34e52b360fe14927a157a60d29f0cefe6f967dafaead6dc61bb2810ba49a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   crypto:
     dependency: transitive
     description:
@@ -130,6 +138,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  cupertino_http:
+    dependency: "direct main"
+    description:
+      name: cupertino_http
+      sha256: b4c900b2bc458965093b60dc9841d3ab43f42e974ce779ef96d8bea56dbd34e0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   curved_navigation_bar:
     dependency: "direct main"
     description:
@@ -406,6 +422,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.1"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: "0d88790bdf7e298aa65a9094c62b58ea231169a2deb84f23defc7d7955885b43"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.2"
   js:
     dependency: transitive
     description:
@@ -454,6 +478,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  package_config:
+    dependency: transitive
+    description:
+      name: package_config
+      sha256: "1c5b77ccc91e4823a5af61ee74e6b972db1ef98c2ff5a18d3161c982a55448bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   path:
     dependency: "direct main"
     description:

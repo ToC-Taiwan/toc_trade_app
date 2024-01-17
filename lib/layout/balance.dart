@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:http/http.dart' as http;
-import 'package:trade_agent/constant/constant.dart';
+import 'package:trade_agent/constant/ad_id.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/orders.dart';
@@ -34,7 +32,7 @@ class _BalancePageState extends State<BalancePage> {
   @override
   void initState() {
     super.initState();
-    futureBalance = fetchBalance();
+    futureBalance = API.fetchBalance();
     BasicDao.getBasicByKey('remove_ad_status').then((value) {
       if (value != null) {
         alreadyRemovedAd = value.value == 'true';
@@ -305,7 +303,7 @@ class _BalancePageState extends State<BalancePage> {
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 setState(() {
-                                  futureBalance = fetchBalance();
+                                  futureBalance = API.fetchBalance();
                                 });
                               },
                               icon: const Icon(
@@ -334,25 +332,6 @@ String commaNumber(String n) => n.replaceAllMapped(reg, mathFunc);
 
 RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
 String mathFunc(Match match) => '${match[1]},';
-
-Future<Balance> fetchBalance() async {
-  // var balance = Balance;
-  try {
-    final response = await http.get(
-      Uri.parse('$tradeAgentURLPrefix/order/balance'),
-      headers: {
-        "Authorization": API.token,
-      },
-    );
-    if (response.statusCode == 200) {
-      return Balance.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      return Balance();
-    }
-  } on Exception {
-    return Balance();
-  }
-}
 
 Widget generateBalanceRow(BalanceDetail balance) {
   Color tmp;

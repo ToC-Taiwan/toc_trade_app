@@ -11,6 +11,7 @@ import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/trade_config.dart';
 import 'package:trade_agent/locale.dart';
+import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/modules/fcm/fcm.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,7 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     if (await Permission.notification.status.isPermanentlyDenied) {
-      await FCM.sendToken(false);
+      FCM.allowPushToken = false;
+      await API.sendToken(false, FCM.getToken);
       setState(() {
         _pushNotificationPermamentlyDenied = true;
       });
@@ -168,7 +170,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (_pushNotificationPermamentlyDenied) {
               return;
             }
-            bool status = await FCM.checkTokenStatus().then((value) => value);
+            bool status = await API.checkTokenStatus(FCM.getToken).then((value) => value);
             setState(() {
               _pushNotification = status;
             });
@@ -182,8 +184,8 @@ class _SettingsPageState extends State<SettingsPage> {
             onChanged: _pushNotificationPermamentlyDenied
                 ? null
                 : (bool? value) async {
-                    await FCM.sendToken(value!).then((_) {
-                      FCM.checkTokenStatus().then((value) {
+                    await API.sendToken(value!, FCM.getToken).then((_) {
+                      API.checkTokenStatus(FCM.getToken).then((value) {
                         setState(() {
                           _pushNotification = value;
                         });

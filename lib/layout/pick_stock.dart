@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/kbar.dart';
@@ -40,14 +39,15 @@ class _PickStockPageState extends State<PickStockPage> {
     super.dispose();
   }
 
-  void initialWS() {
+  void initialWS() async {
     _channel = IOWebSocketChannel.connect(
-      Uri.parse(tradeAgentWSURLPrefix),
+      Uri.parse(backendWSURLPrefix),
       pingInterval: const Duration(seconds: 1),
       headers: {
-        "Authorization": API.token,
+        "Authorization": API.authKey,
       },
     );
+    await _channel!.ready;
     _channel!.stream.listen(
       (message) {
         if (!mounted) {

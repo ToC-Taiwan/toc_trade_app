@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:date_format/date_format.dart' as df;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/modules/api/api.dart';
 
@@ -24,79 +20,41 @@ class _OrderPage extends State<OrderPage> {
   @override
   void initState() {
     super.initState();
-    futureOrder = fetchOrders(widget.date);
+    futureOrder = API.fetchOrders(widget.date);
   }
 
-  Future<void> recalculateBalance() async {
-    try {
-      final response = await http.put(
-        Uri.parse('$tradeAgentURLPrefix/order/date/${widget.date}'),
-        headers: {
-          "Authorization": API.token,
-        },
-      );
-      if (response.statusCode == 200) {
-        _showDialog('Recalculate Success');
-      } else {
-        _showDialog('Recalculate Failed');
-      }
-    } on Exception {
-      _showDialog('Network Error');
-    }
-  }
-
-  Future<String> moveOrderToLatestTradeday(String orderID) async {
-    try {
-      final response = await http.patch(
-        Uri.parse('$tradeAgentURLPrefix/order/future/$orderID'),
-        headers: {
-          "Authorization": API.token,
-        },
-      );
-      if (response.statusCode == 200) {
-        return 'Move Success';
-      } else {
-        return 'Move Failed';
-      }
-    } on Exception {
-      return 'Network Error';
-    }
-  }
-
-  void _showDialog(String message) {
-    if (message.isNotEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          iconColor: Colors.teal,
-          icon: const Icon(
-            Icons.notification_important_outlined,
-            size: 40,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text(AppLocalizations.of(context)!.notification),
-          content: Text(
-            message,
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            Center(
-              child: ElevatedButton(
-                child: Text(
-                  AppLocalizations.of(context)!.ok,
-                  style: const TextStyle(color: Colors.black),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
+  void _showDialog({int? errCode}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        iconColor: Colors.teal,
+        icon: const Icon(
+          Icons.notification_important_outlined,
+          size: 40,
         ),
-      );
-    }
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Text(AppLocalizations.of(context)!.notification),
+        content: Text(
+          errCode == null ? 'Recalculate Success' : 'Recalculate Failed',
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          Center(
+            child: ElevatedButton(
+              child: Text(
+                AppLocalizations.of(context)!.ok,
+                style: const TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showConfirmDialog(String orderID) {
@@ -136,9 +94,16 @@ class _OrderPage extends State<OrderPage> {
               ),
               onPressed: () {
                 Navigator.pop(context);
-                moveOrderToLatestTradeday(orderID).then(_showDialog);
+                API
+                    .moveOrderToLatestTradeday(orderID)
+                    .then(
+                      (_) => _showDialog(),
+                    )
+                    .catchError(
+                      (e) => _showDialog(errCode: e),
+                    );
                 setState(() {
-                  futureOrder = fetchOrders(widget.date);
+                  futureOrder = API.fetchOrders(widget.date);
                 });
               },
             ),
@@ -158,7 +123,7 @@ class _OrderPage extends State<OrderPage> {
           title: Text(widget.date),
           actions: [
             IconButton(
-              onPressed: recalculateBalance,
+              onPressed: () => API.recalculateBalance(widget.date),
               icon: const Icon(Icons.refresh),
             ),
             IconButton(
@@ -229,22 +194,4 @@ class _OrderPage extends State<OrderPage> {
           ),
         ),
       );
-}
-
-Future<FutureOrderArr> fetchOrders(String date) async {
-  try {
-    final response = await http.get(
-      Uri.parse('$tradeAgentURLPrefix/order/date/$date'),
-      headers: {
-        "Authorization": API.token,
-      },
-    );
-    if (response.statusCode == 200) {
-      return FutureOrderArr.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      return FutureOrderArr();
-    }
-  } on Exception {
-    return FutureOrderArr();
-  }
 }

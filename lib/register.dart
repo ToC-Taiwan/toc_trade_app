@@ -1,13 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
-import 'package:trade_agent/constant/constant.dart';
+import 'package:trade_agent/modules/api/api.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({required this.screenHeight, super.key});
@@ -33,8 +31,8 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
   bool confirmPasswordIsObscure = true;
 
   bool registering = false;
-  bool success = false;
   bool bannerIsShown = false;
+  bool registerd = false;
 
   @override
   void initState() {
@@ -54,6 +52,19 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     });
   }
 
+  String codeToFailMsg(int code) {
+    switch (code) {
+      case -1004:
+        return AppLocalizations.of(context)!.email_already_exists;
+      case -1005:
+        return AppLocalizations.of(context)!.username_already_exists;
+      case -1006:
+        return AppLocalizations.of(context)!.email_is_invalid;
+      default:
+        return AppLocalizations.of(context)!.unknown_error;
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -61,52 +72,16 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
     super.dispose();
   }
 
-  Future<String> register(String userName, String password, String email) async {
-    setState(() {
-      registering = true;
-    });
-    final unknownErrMsg = AppLocalizations.of(context)!.unknown_error;
-    try {
-      var registerBody = {
-        'username': userName,
-        'password': password,
-        'email': email,
-      };
-
-      final response = await http.post(
-        Uri.parse('$tradeAgentURLPrefix/user'),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode(registerBody),
-      );
-      if (response.statusCode == 200) {
-        return '';
-      } else {
-        final result = jsonDecode(response.body) as Map<String, dynamic>;
-        return result['response'];
-      }
-    } on Exception {
-      return unknownErrMsg;
-    }
-  }
-
-  void removeBanner() {
+  void showRegisterResultBanner({int? errCode}) {
+    bool success = errCode == null;
     ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-    setState(() {
-      bannerIsShown = false;
-    });
-  }
-
-  void showRegisterResultBanner(String result) {
     setState(() {
       bannerIsShown = true;
     });
-
     ScaffoldMessenger.of(context).showMaterialBanner(
       MaterialBanner(
         content: Text(
-          success ? AppLocalizations.of(context)!.register_success : result,
+          success ? AppLocalizations.of(context)!.register_success : codeToFailMsg(errCode),
           style: const TextStyle(
             color: Colors.black,
           ),
@@ -123,7 +98,10 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
         actions: [
           TextButton(
             onPressed: () {
-              removeBanner();
+              ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+              setState(() {
+                bannerIsShown = false;
+              });
             },
             child: Text(
               AppLocalizations.of(context)!.dismiss,
@@ -186,6 +164,35 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              Container(
+                                margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: TextFormField(
+                                  autofillHints: const [AutofillHints.email],
+                                  enableSuggestions: false,
+                                  autocorrect: false,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return AppLocalizations.of(context)!.email_cannot_be_empty;
+                                    }
+                                    if (!EmailValidator.validate(value)) {
+                                      return AppLocalizations.of(context)!.email_is_invalid;
+                                    }
+                                    email = value;
+                                    return null;
+                                  },
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!.email_address,
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(10),
+                                    hintStyle: const TextStyle(color: Colors.blueGrey),
+                                  ),
+                                ),
+                              ),
                               Container(
                                 margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
                                 decoration: BoxDecoration(
@@ -292,35 +299,6 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                 ),
                               ),
                               Container(
-                                margin: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: TextFormField(
-                                  autofillHints: const [AutofillHints.email],
-                                  enableSuggestions: false,
-                                  autocorrect: false,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return AppLocalizations.of(context)!.email_cannot_be_empty;
-                                    }
-                                    if (!EmailValidator.validate(value)) {
-                                      return AppLocalizations.of(context)!.email_is_invalid;
-                                    }
-                                    email = value;
-                                    return null;
-                                  },
-                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                  decoration: InputDecoration(
-                                    hintText: AppLocalizations.of(context)!.email_address,
-                                    border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.all(10),
-                                    hintStyle: const TextStyle(color: Colors.blueGrey),
-                                  ),
-                                ),
-                              ),
-                              Container(
                                 width: 115,
                                 margin: const EdgeInsets.only(right: 10, left: 5, bottom: 10),
                                 decoration: BoxDecoration(
@@ -328,22 +306,26 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: TextButton(
-                                  onPressed: success
+                                  onPressed: registerd
                                       ? null
                                       : () {
                                           if (!_formkey.currentState!.validate()) {
                                             return;
                                           }
-                                          register(username, password, email).then(
-                                            (value) {
-                                              setState(() {
-                                                success = value.isEmpty;
-                                                registering = false;
-                                              });
-                                              removeBanner();
-                                              showRegisterResultBanner(value);
-                                            },
-                                          );
+                                          setState(() {
+                                            registering = true;
+                                          });
+                                          API
+                                              .register(username, password, email)
+                                              .then(
+                                                (_) => showRegisterResultBanner(),
+                                              )
+                                              .catchError(
+                                                (e) => showRegisterResultBanner(errCode: e as int),
+                                              );
+                                          setState(() {
+                                            registering = false;
+                                          });
                                         },
                                   child: registering
                                       ? const SpinKitWave(
@@ -351,7 +333,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                           size: 20,
                                         )
                                       : Text(
-                                          success ? "😁" : AppLocalizations.of(context)!.register,
+                                          registerd ? "😁" : AppLocalizations.of(context)!.register,
                                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                                         ),
                                 ),

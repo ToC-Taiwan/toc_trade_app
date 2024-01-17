@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/pb/app.pb.dart' as pb;
@@ -52,14 +51,15 @@ class _FutureTradePageState extends State<FutureTradePage> {
     super.dispose();
   }
 
-  void initialWS() {
+  void initialWS() async {
     _channel = IOWebSocketChannel.connect(
-      Uri.parse(tradeAgentFutureWSURLPrefix),
+      Uri.parse(backendFutureWSURLPrefix),
       pingInterval: const Duration(seconds: 1),
       headers: {
-        "Authorization": API.token,
+        "Authorization": API.authKey,
       },
     );
+    await _channel!.ready;
     _channel!.stream.listen(
       (message) {
         if (!mounted) {

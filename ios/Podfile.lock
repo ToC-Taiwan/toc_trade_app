@@ -1,4 +1,6 @@
 PODS:
+  - cupertino_http (0.0.1):
+    - Flutter
   - Firebase/CoreOnly (10.18.0):
     - FirebaseCore (= 10.18.0)
   - Firebase/Messaging (10.18.0):
@@ -113,6 +115,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - cupertino_http (from `.symlinks/plugins/cupertino_http/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
@@ -143,6 +146,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  cupertino_http:
+    :path: ".symlinks/plugins/cupertino_http/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -169,6 +174,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
+  cupertino_http: 5f8b1161107fe6c8d94a0c618735a033d93fa7db
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
   firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
   firebase_messaging: 90e8a6db84b6e1e876cebce4f30f01dc495e7014

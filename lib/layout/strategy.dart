@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
-import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/modules/api/api.dart';
@@ -44,7 +41,7 @@ class _StrategyPage extends State<StrategyPage> {
   void initState() {
     super.initState();
     alreadyPick = getAllPickStock();
-    futureStrategy = fetchStrategy();
+    futureStrategy = API.fetchStrategy();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
@@ -333,25 +330,3 @@ Widget generateRow(String columnName, String value) => SizedBox(
         ),
       ),
     );
-
-Future<List<Strategy>> fetchStrategy() async {
-  final straregyArr = <Strategy>[];
-  try {
-    final response = await http.get(
-      Uri.parse('$tradeAgentURLPrefix/analyze/reborn'),
-      headers: {
-        "Authorization": API.token,
-      },
-    );
-    if (response.statusCode == 200) {
-      for (final i in jsonDecode(response.body) as List<dynamic>) {
-        straregyArr.add(Strategy.fromJson(i as Map<String, dynamic>));
-      }
-      return straregyArr;
-    } else {
-      return straregyArr;
-    }
-  } on Exception {
-    return straregyArr;
-  }
-}

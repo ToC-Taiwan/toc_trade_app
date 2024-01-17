@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
-import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/homepage.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/modules/fcm/fcm.dart';
@@ -34,30 +31,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   bool passwordIsObscure = true;
   bool logining = false;
-
-  Future<String> login(String userName, String password) async {
-    try {
-      var loginBody = {
-        'username': userName,
-        'password': password,
-      };
-      final response = await http.post(
-        Uri.parse('$tradeAgentURLPrefix/login'),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode(loginBody),
-      );
-      final result = jsonDecode(response.body) as Map<String, dynamic>;
-      if (response.statusCode == 200) {
-        return result['token'];
-      } else {
-        throw codeToLoginFailMsg(result['code'] as int);
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
 
   String codeToLoginFailMsg(int code) {
     switch (code) {
@@ -250,9 +223,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                             });
                                             FocusScopeNode currentFocus = FocusScope.of(context);
                                             currentFocus.unfocus();
-                                            login(username, password).then(
-                                              (value) {
-                                                API.token = value;
+                                            API.login(username, password).then(
+                                              (_) {
                                                 checkNotification().then((_) {
                                                   Navigator.of(context).pushAndRemoveUntil(
                                                     PageRouteBuilder(
@@ -271,7 +243,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                               ScaffoldMessenger.of(context).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                    e.toString(),
+                                                    codeToLoginFailMsg(e as int),
                                                     style: const TextStyle(
                                                       color: Colors.red,
                                                     ),

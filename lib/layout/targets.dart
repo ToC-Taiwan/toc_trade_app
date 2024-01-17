@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:http/http.dart' as http;
-import 'package:trade_agent/constant/constant.dart';
+import 'package:trade_agent/constant/ad_id.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/kbar.dart';
@@ -116,7 +114,7 @@ class _TargetspageState extends State<Targetspage> {
   @override
   void initState() {
     super.initState();
-    futureTargets = fetchTargets(current, -1);
+    futureTargets = API.fetchTargets(current, -1);
     BasicDao.getBasicByKey('remove_ad_status').then(
       (value) => {
         if (value != null) {alreadyRemovedAd = value.value == 'true'},
@@ -126,7 +124,7 @@ class _TargetspageState extends State<Targetspage> {
 
   void _onItemClick(num opt) {
     setState(() {
-      futureTargets = fetchTargets(current, opt);
+      futureTargets = API.fetchTargets(current, opt);
     });
   }
 
@@ -308,34 +306,3 @@ Widget buildTile(int cross, int main, Widget child, {Function()? onTap}) => Stag
         ),
       ),
     );
-
-Future<List<Target>> fetchTargets(List<Target> current, num opt) async {
-  final targetArr = <Target>[];
-  if (opt == -1) {
-    try {
-      final response = await http.get(
-        Uri.parse('$tradeAgentURLPrefix/targets'),
-        headers: {
-          "Authorization": API.token,
-        },
-      );
-      if (response.statusCode == 200) {
-        for (final i in jsonDecode(response.body) as List<dynamic>) {
-          targetArr.add(Target.fromJson(i as Map<String, dynamic>));
-        }
-        return targetArr;
-      } else {
-        return targetArr;
-      }
-    } on Exception {
-      return targetArr;
-    }
-  } else {
-    for (final i in current) {
-      if (i.stock!.number!.substring(0, opt.toString().length) == opt.toString()) {
-        targetArr.add(i);
-      }
-    }
-  }
-  return targetArr;
-}

@@ -7,4 +7,3 @@ export 'pick_stock.dart';
 export 'strategy.dart';
 export 'target.dart';
 export 'trade.dart';
-export 'tse.dart';

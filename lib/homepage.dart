@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:http/http.dart' as http;
-import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/layout/balance.dart';
 import 'package:trade_agent/layout/future_trade.dart';
 import 'package:trade_agent/layout/pick_stock.dart';
@@ -35,20 +31,6 @@ class _MyHomePageState extends State<MyHomePage> {
     FCM.refresh();
   }
 
-  Future<String> refreshToken() async {
-    final response = await http.get(
-      Uri.parse('$tradeAgentURLPrefix/refresh'),
-      headers: {
-        "Authorization": API.token,
-      },
-    );
-    if (response.statusCode != 200) {
-      throw Exception('Failed to refresh token');
-    }
-    final result = jsonDecode(response.body) as Map<String, dynamic>;
-    return result['token'];
-  }
-
   final _bottomNavigationKey = FCM.getBottomNavigationKey;
   DateTime _lastFreshTime = DateTime.now();
   int _page = 0;
@@ -73,9 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
           animationDuration: const Duration(milliseconds: 150),
           onTap: (index) {
             if (DateTime.now().difference(_lastFreshTime).inMinutes > 1) {
-              refreshToken().then((value) {
-                API.token = value;
-              }).catchError((e) {
+              API.refreshToken().catchError((e) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/',

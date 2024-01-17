@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
-import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/modules/api/api.dart';
 
@@ -22,21 +19,7 @@ class _TradeConfigPageState extends State<TradeConfigPage> {
   @override
   void initState() {
     super.initState();
-    futureConfig = fetchConfig();
-  }
-
-  Future<Config> fetchConfig() async {
-    final response = await http.get(
-      Uri.parse('$tradeAgentURLPrefix/basic/config'),
-      headers: {
-        "Authorization": API.token,
-      },
-    );
-    if (response.statusCode == 200) {
-      return Config.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      throw 'Failed to load config';
-    }
+    futureConfig = API.fetchConfig();
   }
 
   @override
