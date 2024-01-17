@@ -239,45 +239,47 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: TextButton(
-                                    onPressed: () {
-                                      if (!_formkey.currentState!.validate()) {
-                                        return;
-                                      }
-                                      setState(() {
-                                        logining = true;
-                                      });
-                                      FocusScopeNode currentFocus = FocusScope.of(context);
-                                      currentFocus.unfocus();
-                                      login(username, password).then(
-                                        (value) {
-                                          API.token = value;
-                                          checkNotification().then((_) {
-                                            Navigator.of(context).pushAndRemoveUntil(
-                                              PageRouteBuilder(
-                                                pageBuilder: (context, animation1, animation2) => const MyHomePage(),
-                                                transitionDuration: Duration.zero,
-                                                reverseTransitionDuration: Duration.zero,
-                                              ),
-                                              (route) => false,
-                                            );
-                                          });
-                                        },
-                                      ).catchError((e) {
-                                        setState(() {
-                                          logining = false;
-                                        });
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              e.toString(),
-                                              style: const TextStyle(
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                    },
+                                    onPressed: logining
+                                        ? null
+                                        : () {
+                                            if (!_formkey.currentState!.validate()) {
+                                              return;
+                                            }
+                                            setState(() {
+                                              logining = true;
+                                            });
+                                            FocusScopeNode currentFocus = FocusScope.of(context);
+                                            currentFocus.unfocus();
+                                            login(username, password).then(
+                                              (value) {
+                                                API.token = value;
+                                                checkNotification().then((_) {
+                                                  Navigator.of(context).pushAndRemoveUntil(
+                                                    PageRouteBuilder(
+                                                      pageBuilder: (context, animation1, animation2) => const MyHomePage(),
+                                                      transitionDuration: Duration.zero,
+                                                      reverseTransitionDuration: Duration.zero,
+                                                    ),
+                                                    (route) => false,
+                                                  );
+                                                });
+                                              },
+                                            ).catchError((e) {
+                                              setState(() {
+                                                logining = false;
+                                              });
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    e.toString(),
+                                                    style: const TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                          },
                                     child: logining
                                         ? const SpinKitWave(
                                             color: Colors.white60,
