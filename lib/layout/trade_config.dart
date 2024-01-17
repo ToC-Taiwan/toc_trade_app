@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:trade_agent/constant/constant.dart';
 import 'package:trade_agent/entity/entity.dart';
@@ -85,9 +86,7 @@ class _TradeConfigPageState extends State<TradeConfigPage> {
                 );
               }
               return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
+                child: SpinKitWave(color: Colors.blueGrey, size: 35.0),
               );
             },
           ),

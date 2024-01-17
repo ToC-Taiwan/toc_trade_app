@@ -158,6 +158,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     List<Widget> allExpand = [
       ExpansionTile(
+        maintainState: true,
         controller: controllerA,
         childrenPadding: const EdgeInsets.only(left: 50),
         onExpansionChanged: (value) async {
@@ -173,10 +174,7 @@ class _SettingsPageState extends State<SettingsPage> {
             });
           }
         },
-        leading: const Icon(
-          Icons.notifications,
-          color: Colors.black,
-        ),
+        leading: const Icon(Icons.notifications),
         title: Text(AppLocalizations.of(context)!.notification),
         children: [
           SwitchListTile(
@@ -202,6 +200,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       ExpansionTile(
+        maintainState: true,
         controller: controllerB,
         onExpansionChanged: (value) async {
           if (value) {
@@ -210,27 +209,16 @@ class _SettingsPageState extends State<SettingsPage> {
           }
         },
         childrenPadding: const EdgeInsets.only(left: 50),
-        maintainState: true,
-        leading: const Icon(
-          Icons.language,
-          color: Colors.black,
-        ),
-        title: Text(
-          AppLocalizations.of(context)!.language,
-          style: const TextStyle(color: Colors.black),
-        ),
+        leading: const Icon(Icons.language),
+        title: Text(AppLocalizations.of(context)!.language),
         children: [
           FutureBuilder<Basic?>(
             future: languageGroup,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return RadioListTile<String>(
-                  activeColor: Colors.green,
                   value: 'en',
-                  title: const Text(
-                    'English',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
+                  title: const Text('English'),
                   groupValue: snapshot.data!.value,
                   onChanged: (value) {
                     setState(() {
@@ -242,11 +230,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 );
               }
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
-              );
+              return const SizedBox();
             },
           ),
           FutureBuilder<Basic?>(
@@ -254,12 +238,8 @@ class _SettingsPageState extends State<SettingsPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return RadioListTile<String>(
-                  activeColor: Colors.green,
                   value: 'zh_Hant_TW',
-                  title: const Text(
-                    '繁體中文',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
+                  title: const Text('繁體中文'),
                   groupValue: snapshot.data!.value,
                   onChanged: (value) {
                     setState(() {
@@ -271,11 +251,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 );
               }
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
-              );
+              return const SizedBox();
             },
           ),
           FutureBuilder<Basic?>(
@@ -283,12 +259,8 @@ class _SettingsPageState extends State<SettingsPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return RadioListTile<String>(
-                  activeColor: Colors.green,
                   value: 'zh_Hans_CN',
-                  title: const Text(
-                    '简体中文',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
+                  title: const Text('简体中文'),
                   groupValue: snapshot.data!.value,
                   onChanged: (value) {
                     setState(() {
@@ -300,11 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 );
               }
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
-              );
+              return const SizedBox();
             },
           ),
           FutureBuilder<Basic?>(
@@ -312,12 +280,8 @@ class _SettingsPageState extends State<SettingsPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return RadioListTile<String>(
-                  activeColor: Colors.green,
                   value: 'ja',
-                  title: const Text(
-                    '日文',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
+                  title: const Text('日文'),
                   groupValue: snapshot.data!.value,
                   onChanged: (value) {
                     setState(() {
@@ -329,11 +293,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 );
               }
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
-              );
+              return const SizedBox();
             },
           ),
           FutureBuilder<Basic?>(
@@ -341,12 +301,8 @@ class _SettingsPageState extends State<SettingsPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return RadioListTile<String>(
-                  activeColor: Colors.green,
                   value: 'ko',
-                  title: const Text(
-                    '韓文',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
+                  title: const Text('韓文'),
                   groupValue: snapshot.data!.value,
                   onChanged: (value) {
                     setState(() {
@@ -358,17 +314,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 );
               }
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
-              );
+              return const SizedBox();
             },
           ),
         ],
       ),
       Platform.isAndroid
           ? ExpansionTile(
+              maintainState: true,
               onExpansionChanged: (value) async {
                 if (value) {
                   controllerA!.collapse();
@@ -376,16 +329,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 }
               },
               controller: controllerC,
-              leading: const Icon(
-                Icons.workspace_premium,
-                color: Colors.black,
-              ),
-              title: Text(
-                AppLocalizations.of(context)!.developing,
-                style: const TextStyle(color: Colors.black),
-              ),
+              leading: const Icon(Icons.workspace_premium),
+              title: Text(AppLocalizations.of(context)!.developing),
             )
           : ExpansionTile(
+              maintainState: true,
               controller: controllerC,
               onExpansionChanged: (value) async {
                 if (value) {
@@ -394,14 +342,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 }
               },
               childrenPadding: const EdgeInsets.only(left: 50),
-              leading: const Icon(
-                Icons.remove_circle,
-                color: Colors.black,
-              ),
-              title: Text(
-                AppLocalizations.of(context)!.remove_ads,
-                style: const TextStyle(color: Colors.black),
-              ),
+              leading: const Icon(Icons.remove_circle),
+              title: Text(AppLocalizations.of(context)!.remove_ads),
               children: [
                 _buildProductList(),
                 _buildRestoreButton(),
@@ -411,10 +353,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
       ListTile(
-        leading: const Icon(
-          Icons.info_rounded,
-          color: Colors.black,
-        ),
+        leading: const Icon(Icons.info_rounded),
         title: Text(AppLocalizations.of(context)!.version),
         trailing: FutureBuilder<Basic?>(
           future: futureVersion,
@@ -437,10 +376,7 @@ class _SettingsPageState extends State<SettingsPage> {
         thickness: 0,
       ),
       ListTile(
-        leading: const Icon(
-          Icons.settings,
-          color: Colors.black,
-        ),
+        leading: const Icon(Icons.settings),
         title: Text(AppLocalizations.of(context)!.trade_configuration),
         subtitle: Text(AppLocalizations.of(context)!.read_only),
         onTap: () => Navigator.push(
@@ -453,10 +389,7 @@ class _SettingsPageState extends State<SettingsPage> {
         thickness: 0,
       ),
       ListTile(
-        leading: const Icon(
-          Icons.settings_accessibility_outlined,
-          color: Colors.black,
-        ),
+        leading: const Icon(Icons.settings_accessibility_outlined),
         title: Text(AppLocalizations.of(context)!.about_me),
         onTap: () {
           _launchInWebViewOrVC(Uri(scheme: 'https', path: 'tocandraw.com'));
@@ -500,7 +433,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (_notFoundIds.isNotEmpty) {
       productList.add(
         ListTile(
-          title: Text(AppLocalizations.of(context)!.product_list_abnormal, style: const TextStyle(color: Colors.black)),
+          title: Text(AppLocalizations.of(context)!.product_list_abnormal),
         ),
       );
     }
