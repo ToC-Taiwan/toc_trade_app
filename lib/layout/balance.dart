@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:trade_agent/constant/ad_id.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
 import 'package:trade_agent/layout/component/app_bar/app_bar.dart';
 import 'package:trade_agent/layout/orders.dart';
+import 'package:trade_agent/modules/ad/ad_id.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/utils/utils.dart';
 
