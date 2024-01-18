@@ -56,7 +56,7 @@ class API {
     );
     final result = jsonDecode(response.body) as Map<String, dynamic>;
     if (response.statusCode == 200) {
-      _apiToken = result['token'];
+      setAuthKey = result['token'];
     } else {
       throw result['code'] as int;
     }
@@ -73,7 +73,7 @@ class API {
     if (response.statusCode != 200) {
       throw result['code'] as int;
     }
-    _apiToken = result['token'];
+    setAuthKey = result['token'];
   }
 
   static Future<void> register(String userName, String password, String email) async {

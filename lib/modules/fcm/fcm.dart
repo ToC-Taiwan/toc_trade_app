@@ -47,7 +47,7 @@ class FCM {
     });
   }
 
-  static refresh() async {
+  static postInit() async {
     if (!_authorizationStatus) {
       return;
     }

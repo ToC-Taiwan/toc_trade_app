@@ -28,48 +28,57 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    FCM.refresh();
+    FCM.postInit();
+    AppLifecycleListener(
+      onResume: () => refresh(),
+    );
   }
 
   final _bottomNavigationKey = FCM.getBottomNavigationKey;
   DateTime _lastFreshTime = DateTime.now();
   int _page = 0;
 
+  void refresh() {
+    if (DateTime.now().difference(_lastFreshTime).inSeconds > 600) {
+      API.refreshToken().catchError((e) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/',
+          (route) => false,
+          arguments: AppLocalizations.of(context)!.please_login_again,
+        );
+      });
+      _lastFreshTime = DateTime.now();
+    }
+  }
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: pages[_page],
-        bottomNavigationBar: CurvedNavigationBar(
-          key: _bottomNavigationKey,
-          height: 70,
-          items: const <Widget>[
-            Icon(Icons.assignment_outlined, size: 30),
-            Icon(Icons.call_to_action_rounded, size: 30),
-            Icon(Icons.account_balance_outlined, size: 30),
-            Icon(Icons.dashboard_customize, size: 30),
-            Icon(Icons.money, size: 30),
-          ],
-          color: Colors.blueGrey,
-          buttonBackgroundColor: Colors.greenAccent,
-          backgroundColor: Colors.white,
-          animationCurve: Curves.easeInCubic,
-          animationDuration: const Duration(milliseconds: 150),
-          onTap: (index) {
-            if (DateTime.now().difference(_lastFreshTime).inMinutes > 1) {
-              API.refreshToken().catchError((e) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/',
-                  (route) => false,
-                  arguments: AppLocalizations.of(context)!.please_login_again,
-                );
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () => refresh(),
+        child: Scaffold(
+          body: pages[_page],
+          bottomNavigationBar: CurvedNavigationBar(
+            key: _bottomNavigationKey,
+            height: 70,
+            items: const <Widget>[
+              Icon(Icons.assignment_outlined, size: 30),
+              Icon(Icons.call_to_action_rounded, size: 30),
+              Icon(Icons.account_balance_outlined, size: 30),
+              Icon(Icons.dashboard_customize, size: 30),
+              Icon(Icons.money, size: 30),
+            ],
+            color: Colors.blueGrey,
+            buttonBackgroundColor: Colors.greenAccent,
+            backgroundColor: Colors.white,
+            animationCurve: Curves.easeInCubic,
+            animationDuration: const Duration(milliseconds: 150),
+            onTap: (index) {
+              setState(() {
+                _page = index;
               });
-              _lastFreshTime = DateTime.now();
-            }
-            setState(() {
-              _page = index;
-            });
-          },
-          letIndexChange: (index) => true,
+            },
+            letIndexChange: (index) => true,
+          ),
         ),
       );
 }
