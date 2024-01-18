@@ -7,9 +7,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:trade_agent/constant/ad_id.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/layout/component/app_bar/app_bar.dart';
 import 'package:trade_agent/layout/orders.dart';
 import 'package:trade_agent/modules/api/api.dart';
-import 'package:trade_agent/utils/app_bar.dart';
+import 'package:trade_agent/utils/utils.dart';
 
 class BalancePage extends StatefulWidget {
   const BalancePage({super.key});
@@ -327,11 +328,6 @@ class _BalancePageState extends State<BalancePage> {
         ),
       );
 }
-
-String commaNumber(String n) => n.replaceAllMapped(reg, mathFunc);
-
-RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-String mathFunc(Match match) => '${match[1]},';
 
 Widget generateBalanceRow(BalanceDetail balance) {
   Color tmp;

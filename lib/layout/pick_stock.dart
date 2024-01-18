@@ -6,9 +6,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/layout/component/app_bar/app_bar.dart';
 import 'package:trade_agent/layout/kbar.dart';
 import 'package:trade_agent/modules/api/api.dart';
-import 'package:trade_agent/utils/app_bar.dart';
 import 'package:web_socket_channel/io.dart';
 
 class PickStockPage extends StatefulWidget {

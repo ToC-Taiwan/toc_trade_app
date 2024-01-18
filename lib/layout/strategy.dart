@@ -7,8 +7,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/layout/component/app_bar/app_bar.dart';
 import 'package:trade_agent/modules/api/api.dart';
-import 'package:trade_agent/utils/app_bar.dart';
 
 class StrategyPage extends StatefulWidget {
   const StrategyPage({super.key});
@@ -297,11 +297,6 @@ List<Widget> generateStockRow(List<Stocks> arr, BuildContext context) {
   }
   return tmp;
 }
-
-String commaNumber(String n) => n.replaceAllMapped(reg, mathFunc);
-
-RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-String mathFunc(Match match) => '${match[1]},';
 
 Widget generateRow(String columnName, String value) => SizedBox(
       height: 50,

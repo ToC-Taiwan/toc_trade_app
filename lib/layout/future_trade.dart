@@ -7,9 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/layout/component/app_bar/app_bar.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/pb/app.pb.dart' as pb;
-import 'package:trade_agent/utils/app_bar.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:web_socket_channel/io.dart';
 

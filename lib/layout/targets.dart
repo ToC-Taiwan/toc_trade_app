@@ -9,9 +9,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:trade_agent/constant/ad_id.dart';
 import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/entity/entity.dart';
+import 'package:trade_agent/layout/component/app_bar/app_bar.dart';
 import 'package:trade_agent/layout/kbar.dart';
 import 'package:trade_agent/modules/api/api.dart';
-import 'package:trade_agent/utils/app_bar.dart';
+import 'package:trade_agent/utils/utils.dart';
 
 class Targetspage extends StatefulWidget {
   const Targetspage({super.key});
@@ -285,12 +286,6 @@ class _TargetspageState extends State<Targetspage> {
         ),
       );
 }
-
-RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-
-String commaNumber(String n) => n.replaceAllMapped(reg, mathFunc);
-
-String mathFunc(Match match) => '${match[1]},';
 
 Widget buildTile(int cross, int main, Widget child, {Function()? onTap}) => StaggeredGridTile.count(
       crossAxisCellCount: cross,
