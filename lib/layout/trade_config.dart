@@ -22,6 +22,33 @@ class _TradeConfigPageState extends State<TradeConfigPage> {
     futureConfig = API.fetchConfig();
   }
 
+  ExpansionTile _buildExpansionTile(String title, Map<String, dynamic> data) {
+    final children = <Widget>[];
+    data.forEach((key, value) {
+      if (value is Map<String, dynamic>) {
+        children.add(_buildExpansionTile(key, value));
+        return;
+      }
+      children.add(
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: ListTile(
+            title: Text(key),
+            trailing: Text(value.toString()),
+          ),
+        ),
+      );
+    });
+    return ExpansionTile(
+      leading: const Icon(Icons.computer, color: Colors.black),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      ),
+      children: children,
+    );
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.white,
@@ -75,31 +102,4 @@ class _TradeConfigPageState extends State<TradeConfigPage> {
           ),
         ),
       );
-}
-
-ExpansionTile _buildExpansionTile(String title, Map<String, dynamic> data) {
-  final children = <Widget>[];
-  data.forEach((key, value) {
-    if (value is Map<String, dynamic>) {
-      children.add(_buildExpansionTile(key, value));
-      return;
-    }
-    children.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: ListTile(
-          title: Text(key),
-          trailing: Text(value.toString()),
-        ),
-      ),
-    );
-  });
-  return ExpansionTile(
-    leading: const Icon(Icons.computer, color: Colors.black),
-    title: Text(
-      title,
-      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-    ),
-    children: children,
-  );
 }

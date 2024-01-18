@@ -140,6 +140,54 @@ class _BalancePageState extends State<BalancePage> {
     return Colors.grey;
   }
 
+  Widget generateBalanceRow(BalanceDetail balance) {
+    Color tmp;
+    if (balance.total! > 0) {
+      tmp = Colors.red;
+    } else {
+      tmp = Colors.green;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 18, left: 20),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Text(
+              balance.tradeDay!.substring(0, 10),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              balance.tradeCount!.toString(),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              balance.originalBalance!.toString(),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              balance.discount!.toString(),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              balance.total!.toString(),
+              style: TextStyle(color: tmp),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         // backgroundColor: Colors.white,
@@ -327,52 +375,4 @@ class _BalancePageState extends State<BalancePage> {
           },
         ),
       );
-}
-
-Widget generateBalanceRow(BalanceDetail balance) {
-  Color tmp;
-  if (balance.total! > 0) {
-    tmp = Colors.red;
-  } else {
-    tmp = Colors.green;
-  }
-  return Padding(
-    padding: const EdgeInsets.only(top: 18, left: 20),
-    child: Row(
-      children: [
-        Expanded(
-          flex: 4,
-          child: Text(
-            balance.tradeDay!.substring(0, 10),
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            balance.tradeCount!.toString(),
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Text(
-            balance.originalBalance!.toString(),
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            balance.discount!.toString(),
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Text(
-            balance.total!.toString(),
-            style: TextStyle(color: tmp),
-          ),
-        ),
-      ],
-    ),
-  );
 }
