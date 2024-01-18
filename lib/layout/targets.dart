@@ -22,11 +22,19 @@ class Targetspage extends StatefulWidget {
 }
 
 class _TargetspageState extends State<Targetspage> {
-  static const _insets = 16.0;
-  BannerAd? _inlineAdaptiveAd;
-  bool _isLoaded = false;
-  AdSize? _adSize;
   late Orientation _currentOrientation;
+  late Future<List<Target>> futureTargets;
+
+  static const _insets = 16.0;
+
+  BannerAd? _inlineAdaptiveAd;
+  AdSize? _adSize;
+
+  bool _isLoaded = false;
+  bool alreadyRemovedAd = false;
+
+  TextEditingController textFieldController = TextEditingController();
+  List<Target> current = [];
 
   double get _adWidth => MediaQuery.of(context).size.width * 2 / 3 - (2 * _insets);
   double get _adHight => MediaQuery.of(context).size.height / 2;
@@ -107,11 +115,6 @@ class _TargetspageState extends State<Targetspage> {
     _inlineAdaptiveAd?.dispose();
   }
 
-  TextEditingController textFieldController = TextEditingController();
-  late Future<List<Target>> futureTargets;
-  List<Target> current = [];
-  bool alreadyRemovedAd = false;
-
   @override
   void initState() {
     super.initState();
@@ -134,170 +137,178 @@ class _TargetspageState extends State<Targetspage> {
     _onItemClick(-1);
   }
 
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.white,
-        appBar: trAppbar(
-          context,
-          AppLocalizations.of(context)!.targets,
+  Widget buildTile(int cross, int main, Widget child, {Function()? onTapFunc}) => StaggeredGridTile.count(
+        crossAxisCellCount: cross,
+        mainAxisCellCount: main,
+        child: Material(
+          color: Colors.grey[100],
+          elevation: 2,
+          borderRadius: BorderRadius.circular(12),
+          shadowColor: Colors.blueGrey.shade50,
+          child: InkWell(
+            onTap: onTapFunc != null ? () => onTapFunc() : () {},
+            child: child,
+          ),
         ),
-        body: SizedBox(
-          child: FutureBuilder<List<Target>>(
-            future: futureTargets,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.isEmpty) {
-                  return Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.no_data,
-                      style: const TextStyle(
-                        fontSize: 30,
-                      ),
-                    ),
-                  );
-                }
-                final tmp = <Widget>[];
-                current = snapshot.data!;
-                for (final i in snapshot.data!) {
-                  if (i.rank == -1) {
-                    continue;
-                  }
-                  if (i.rank! == 6 && !alreadyRemovedAd) {
-                    tmp.add(
-                      buildTile(
-                        2,
-                        2,
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: _getAdWidget(),
+      );
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () {
+          final currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: trAppbar(
+            context,
+            AppLocalizations.of(context)!.targets,
+          ),
+          body: SizedBox(
+            child: FutureBuilder<List<Target>>(
+              future: futureTargets,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.no_data,
+                        style: const TextStyle(
+                          fontSize: 30,
                         ),
                       ),
                     );
                   }
-                  tmp.add(
-                    buildTile(
-                      1,
-                      1,
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8),
+                  final tmp = <Widget>[];
+                  current = snapshot.data!;
+                  for (final i in snapshot.data!) {
+                    if (i.rank == -1) {
+                      continue;
+                    }
+                    if (i.rank! == 6 && !alreadyRemovedAd) {
+                      tmp.add(
+                        buildTile(
+                          2,
+                          2,
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: _getAdWidget(),
+                          ),
+                        ),
+                      );
+                    }
+                    tmp.add(
+                      buildTile(
+                        1,
+                        1,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: AutoSizeText(
+                                  i.stock!.number!,
+                                  style: const TextStyle(fontSize: 22, color: Colors.black),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
                               child: AutoSizeText(
-                                i.stock!.number!,
-                                style: const TextStyle(fontSize: 22, color: Colors.black),
+                                i.stock!.name!,
+                                style: const TextStyle(fontSize: 22, color: Color.fromARGB(255, 138, 155, 208), fontWeight: FontWeight.bold),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: AutoSizeText(
-                              i.stock!.name!,
-                              style: const TextStyle(fontSize: 22, color: Color.fromARGB(255, 138, 155, 208), fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 5, right: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AutoSizeText(
-                                    commaNumber('${i.volume! ~/ 1000}k'),
-                                    style: const TextStyle(fontSize: 14, color: Colors.red),
-                                  ),
-                                  AutoSizeText(
-                                    i.stock!.lastClose!.toString(),
-                                    style: const TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                            Expanded(
+                              flex: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5, right: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    AutoSizeText(
+                                      commaNumber('${i.volume! ~/ 1000}k'),
+                                      style: const TextStyle(fontSize: 14, color: Colors.red),
+                                    ),
+                                    AutoSizeText(
+                                      i.stock!.lastClose!.toString(),
+                                      style: const TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          // Text(i.rank.toString()),
-                        ],
+                            // Text(i.rank.toString()),
+                          ],
+                        ),
+                        onTapFunc: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Kbar(
+                                stockNum: i.stock!.number!,
+                                stockName: i.stock!.name!,
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Kbar(
-                              stockNum: i.stock!.number!,
-                              stockName: i.stock!.name!,
+                    );
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        TextFormField(
+                          textAlignVertical: TextAlignVertical.center,
+                          controller: textFieldController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            icon: const Icon(
+                              Icons.search,
+                              color: Colors.grey,
+                            ),
+                            border: const UnderlineInputBorder(),
+                            labelText: AppLocalizations.of(context)!.search,
+                            hintText: AppLocalizations.of(context)!.stock_number,
+                            suffixIcon: IconButton(
+                              onPressed: clearTextField,
+                              icon: const Icon(Icons.clear, color: Colors.grey),
                             ),
                           ),
-                        );
-                      },
+                          textInputAction: TextInputAction.search,
+                          onChanged: (val) {
+                            if (val.isNotEmpty) {
+                              _onItemClick(int.parse(val));
+                            } else {
+                              _onItemClick(-1);
+                            }
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: StaggeredGrid.count(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            children: tmp,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
-                return Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      TextFormField(
-                        textAlignVertical: TextAlignVertical.center,
-                        controller: textFieldController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          icon: const Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                          ),
-                          border: const UnderlineInputBorder(),
-                          labelText: AppLocalizations.of(context)!.search,
-                          hintText: AppLocalizations.of(context)!.stock_number,
-                          suffixIcon: IconButton(
-                            onPressed: clearTextField,
-                            icon: const Icon(Icons.clear, color: Colors.grey),
-                          ),
-                        ),
-                        textInputAction: TextInputAction.search,
-                        onChanged: (val) {
-                          if (val.isNotEmpty) {
-                            _onItemClick(int.parse(val));
-                          } else {
-                            _onItemClick(-1);
-                          }
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: StaggeredGrid.count(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          children: tmp,
-                        ),
-                      ),
-                    ],
-                  ),
+                return const Center(
+                  child: SpinKitWave(color: Colors.blueGrey, size: 35.0),
                 );
-              }
-              return const Center(
-                child: SpinKitWave(color: Colors.blueGrey, size: 35.0),
-              );
-            },
+              },
+            ),
           ),
         ),
       );
 }
-
-Widget buildTile(int cross, int main, Widget child, {Function()? onTap}) => StaggeredGridTile.count(
-      crossAxisCellCount: cross,
-      mainAxisCellCount: main,
-      child: Material(
-        color: Colors.grey[100],
-        elevation: 2,
-        borderRadius: BorderRadius.circular(12),
-        shadowColor: Colors.blueGrey.shade50,
-        child: InkWell(
-          onTap: onTap != null ? () => onTap() : () {},
-          child: child,
-        ),
-      ),
-    );
