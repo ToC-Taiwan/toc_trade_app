@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:trade_agent/daos/database.dart';
 import 'package:trade_agent/homepage.dart';
 import 'package:trade_agent/modules/api/api.dart';
 import 'package:trade_agent/modules/fcm/fcm.dart';
@@ -26,6 +27,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   late AnimationController _controller;
   late Animation<double> _animation;
 
+  String version = '';
   String username = '';
   String password = '';
 
@@ -45,11 +47,21 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     }
   }
 
+  void getVersion() {
+    BasicDao.getBasicByKey('version').then((value) {
+      setState(() {
+        version = value!.value;
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getVersion();
+
     _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-    _animation = Tween<double>(begin: widget.screenHeight * 0.7, end: widget.screenHeight * 0.3).animate(_controller);
+    _animation = Tween<double>(begin: widget.screenHeight * 0.6, end: widget.screenHeight * 0.25).animate(_controller);
 
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
@@ -312,7 +324,28 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
               ),
             ),
           ),
-        )
+        ),
+        SizedBox(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: widget.screenHeight * 0.05),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Center(
+                  child: Text(
+                    version.isEmpty ? '' : '${AppLocalizations.of(context)!.version}: $version',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
